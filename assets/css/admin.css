@@ -39,6 +39,37 @@
 }
 
 /* --------------------------------------------------------------------------
+   Shortcode info
+   -------------------------------------------------------------------------- */
+
+.clc-admin__shortcode-info {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    background: #f0f6fc;
+    border: 1px solid #c3d9ed;
+    border-radius: 6px;
+    padding: 10px 16px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: #333;
+}
+
+.clc-admin__shortcode-info code {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-size: 12px;
+    color: #0073aa;
+}
+
+.clc-admin__shortcode-hint {
+    color: #666;
+}
+
+/* --------------------------------------------------------------------------
    Broadcast form
    -------------------------------------------------------------------------- */
 

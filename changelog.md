@@ -5,6 +5,17 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [1.8.0] - 2026-04-26
+
+- Updated `render_shortcode()` in `class-public.php` to accept `$atts` — supports `title` and `placeholder` attributes via `shortcode_atts()` with safe defaults
+- Both attributes sanitized with `sanitize_text_field()` before passing to template
+- Updated `templates/public/chat-widget.php` — header title and name input placeholder now dynamic via `$title` / `$placeholder` variables with fallback defaults
+- Added shortcode usage panel to `templates/admin/broadcast-panel.php` — shows `[livechat]` and optional attributes example
+- Added `.clc-admin__shortcode-info` styles to `admin.css` — info box with code highlighting
+- Shortcode can now be placed on any page; title and placeholder are fully customizable: `[livechat title="عنوان دلخواه" placeholder="نام شما"]`
+
+---
+
 ## [1.7.0] - 2026-04-26
 
 - Created `admin/class-admin.php` — registers admin menu page under `dashicons-megaphone`, enqueues admin assets only on the plugin's own admin page via `$page_hook` comparison

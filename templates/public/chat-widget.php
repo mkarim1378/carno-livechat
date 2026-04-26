@@ -2,6 +2,9 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
+
+$title       = isset( $title )       ? $title       : __( 'پشتیبانی آنلاین', 'carno-livechat' );
+$placeholder = isset( $placeholder ) ? $placeholder : __( 'نام شما', 'carno-livechat' );
 ?>
 <div id="carno-livechat-wrap" dir="rtl">
 
@@ -11,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             <input
                 type="text"
                 id="clc-name-input"
-                placeholder="<?php esc_attr_e( 'نام شما', 'carno-livechat' ); ?>"
+                placeholder="<?php echo esc_attr( $placeholder ); ?>"
                 maxlength="100"
                 autocomplete="off"
             />
@@ -23,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
     <div id="clc-chat" class="clc-chat" style="display:none;">
         <div class="clc-chat__header">
-            <span class="clc-chat__title"><?php esc_html_e( 'پشتیبانی آنلاین', 'carno-livechat' ); ?></span>
+            <span class="clc-chat__title"><?php echo esc_html( $title ); ?></span>
             <span class="clc-chat__status"></span>
         </div>
 

@@ -64,7 +64,19 @@ class Carno_Livechat_Public {
         add_shortcode( 'livechat', [ $this, 'render_shortcode' ] );
     }
 
-    public function render_shortcode() {
+    public function render_shortcode( $atts ) {
+        $atts = shortcode_atts(
+            [
+                'title'       => __( 'پشتیبانی آنلاین', 'carno-livechat' ),
+                'placeholder' => __( 'نام شما', 'carno-livechat' ),
+            ],
+            $atts,
+            'livechat'
+        );
+
+        $title       = sanitize_text_field( $atts['title'] );
+        $placeholder = sanitize_text_field( $atts['placeholder'] );
+
         ob_start();
         include CARNO_LIVECHAT_PATH . 'templates/public/chat-widget.php';
         return ob_get_clean();

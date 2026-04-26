@@ -16,6 +16,15 @@ if ( ! current_user_can( 'manage_options' ) ) {
         <strong id="clc-online-count">—</strong>
     </div>
 
+    <div class="clc-admin__shortcode-info">
+        <strong><?php esc_html_e( 'Shortcode:', 'carno-livechat' ); ?></strong>
+        <code>[livechat]</code>
+        <span class="clc-admin__shortcode-hint">
+            <?php esc_html_e( 'Optional attributes:', 'carno-livechat' ); ?>
+            <code>[livechat title="عنوان دلخواه" placeholder="نام شما"]</code>
+        </span>
+    </div>
+
     <div class="clc-admin__form">
         <label for="clc-broadcast-message">
             <?php esc_html_e( 'Broadcast Message', 'carno-livechat' ); ?>
