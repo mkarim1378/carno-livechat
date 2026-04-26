@@ -27,8 +27,9 @@ class Carno_Livechat {
         // require_once CARNO_LIVECHAT_PATH . 'admin/class-admin.php';
         // require_once CARNO_LIVECHAT_PATH . 'admin/class-admin-ajax.php';
 
-        // Public classes — loaded in Phase 4+
-        // require_once CARNO_LIVECHAT_PATH . 'public/class-public.php';
+        require_once CARNO_LIVECHAT_PATH . 'public/class-public.php';
+
+        // Public AJAX — loaded in Phase 6+
         // require_once CARNO_LIVECHAT_PATH . 'public/class-public-ajax.php';
 
         $this->loader = new Carno_Livechat_Loader();
@@ -39,7 +40,10 @@ class Carno_Livechat {
     }
 
     private function define_public_hooks() {
-        // Wired in Phase 4+ when Carno_Livechat_Public is available
+        $public = new Carno_Livechat_Public( $this->plugin_name, $this->version );
+
+        $this->loader->add_action( 'wp_enqueue_scripts', $public, 'enqueue_styles' );
+        $this->loader->add_action( 'wp_enqueue_scripts', $public, 'enqueue_scripts' );
     }
 
     public function run() {

@@ -5,6 +5,18 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [1.3.0] - 2026-04-26
+
+- Created `public/class-public.php` with `Carno_Livechat_Public` class
+- Implemented `enqueue_styles()` — enqueues `public.css` only on pages containing `[livechat]` shortcode
+- Implemented `enqueue_scripts()` — enqueues `main.js` only on pages containing `[livechat]` shortcode
+- Script localization via `wp_localize_script()` exposes `CarnoLivechat` object: `ajax_url`, `nonce`, `polling_interval` (5000ms), `heartbeat_interval` (20000ms)
+- Added `is_livechat_page()` helper — guards enqueue via `has_shortcode()` check
+- Wired `wp_enqueue_scripts` hooks for styles and scripts in `class-plugin.php`
+- Created placeholder asset files: `assets/css/public.css`, `assets/css/admin.css`, `assets/js/public/main.js`, `assets/js/admin.js`
+
+---
+
 ## [1.2.0] - 2026-04-26
 
 - Created `includes/class-loader.php` — hook/filter registration manager (`add_action`, `add_filter`, `run()`)
