@@ -1,4 +1,4 @@
-(function ($) {
+(function () {
     'use strict';
 
     window.CarnoLC = window.CarnoLC || {};
@@ -11,7 +11,7 @@
             var interval = CarnoLivechat.heartbeat_interval || 20000;
 
             this._timer = setInterval(function () {
-                $.post(CarnoLivechat.ajax_url, {
+                CarnoLC._post(CarnoLivechat.ajax_url, {
                     action:     'livechat_heartbeat',
                     nonce:      CarnoLivechat.nonce,
                     session_id: sessionId
@@ -27,4 +27,4 @@
         }
     };
 
-}(jQuery));
+}());

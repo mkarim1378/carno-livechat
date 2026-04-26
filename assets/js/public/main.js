@@ -1,25 +1,23 @@
-(function ($) {
+(function () {
     'use strict';
 
     function startChat(name, sessionId) {
-        $('#clc-chat').addClass('clc-chat--visible');
+        var chat = document.getElementById('clc-chat');
+        if (chat) chat.classList.add('clc-chat--visible');
         CarnoLC.Heartbeat.start(sessionId);
         CarnoLC.Polling.start();
     }
 
-    $(document).ready(function () {
-        var $chat  = $('#clc-chat');
-        var $modal = $('#clc-modal');
+    document.addEventListener('DOMContentLoaded', function () {
+        var chat  = document.getElementById('clc-chat');
+        var modal = document.getElementById('clc-modal');
 
-        if (!$chat.length || !$modal.length) {
-            return;
-        }
+        if (!chat || !modal) return;
 
         var session = CarnoLC.Session.get();
 
         if (session && session.session_id) {
-            // Returning visitor: silently update last_seen
-            $.post(CarnoLivechat.ajax_url, {
+            CarnoLC._post(CarnoLivechat.ajax_url, {
                 action:     'livechat_register',
                 nonce:      CarnoLivechat.nonce,
                 name:       session.name,
@@ -30,7 +28,6 @@
             startChat(session.name, session.session_id);
 
         } else {
-            // New visitor: show name modal
             CarnoLC.Modal.show();
             CarnoLC.Modal.init(function (name, sessionId) {
                 startChat(name, sessionId);
@@ -38,4 +35,4 @@
         }
     });
 
-}(jQuery));
+}());

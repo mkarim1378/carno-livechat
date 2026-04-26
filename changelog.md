@@ -5,6 +5,20 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [1.9.2] - 2026-04-26
+
+- Removed jQuery dependency from all JS files — plugin now uses zero third-party JS
+- Added `CarnoLC._post()` XHR helper to `session.js` — shared by all modules that need AJAX
+- Rewrote `modal.js` — vanilla DOM events, `XMLHttpRequest` for register call
+- Rewrote `heartbeat.js` — vanilla `setInterval` + `CarnoLC._post()`
+- Rewrote `chat.js` — `createElement`/`textContent` for XSS-safe bubble rendering, `removeChild` for empty state removal
+- Rewrote `polling.js` — vanilla `CarnoLC._post()`, `_fetching` flag preserved
+- Rewrote `main.js` — `document.addEventListener('DOMContentLoaded')`, `classList.add()` for chat visibility
+- Rewrote `admin.js` — vanilla XHR helper, `DOMContentLoaded`, `textContent` for feedback
+- Removed `'jquery'` from all `wp_enqueue_script()` dependency arrays in `class-public.php` and `class-admin.php`
+
+---
+
 ## [1.9.1] - 2026-04-26
 
 - Fixed duplicate message rendering in `polling.js` — added `_fetching` flag that blocks a new AJAX request if the previous one is still in-flight; flag is released in `.always()` regardless of success or failure

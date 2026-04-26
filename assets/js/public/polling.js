@@ -1,4 +1,4 @@
-(function ($) {
+(function () {
     'use strict';
 
     window.CarnoLC = window.CarnoLC || {};
@@ -28,28 +28,30 @@
         },
 
         _fetch: function () {
-            if (this._fetching) {
-                return;
-            }
+            if (this._fetching) return;
 
             this._fetching = true;
             var self = this;
 
-            $.post(CarnoLivechat.ajax_url, {
-                action:  'livechat_get_messages',
-                nonce:   CarnoLivechat.nonce,
-                last_id: self._lastId
-            })
-            .done(function (res) {
-                if (res.success && res.data.messages && res.data.messages.length) {
-                    CarnoLC.Chat.render(res.data.messages);
-                    self._lastId = parseInt(res.data.messages[res.data.messages.length - 1].id, 10);
+            CarnoLC._post(
+                CarnoLivechat.ajax_url,
+                {
+                    action:  'livechat_get_messages',
+                    nonce:   CarnoLivechat.nonce,
+                    last_id: self._lastId
+                },
+                function (res) {
+                    if (res.success && res.data.messages && res.data.messages.length) {
+                        CarnoLC.Chat.render(res.data.messages);
+                        self._lastId = parseInt(res.data.messages[res.data.messages.length - 1].id, 10);
+                    }
+                    self._fetching = false;
+                },
+                function () {
+                    self._fetching = false;
                 }
-            })
-            .always(function () {
-                self._fetching = false;
-            });
+            );
         }
     };
 
-}(jQuery));
+}());

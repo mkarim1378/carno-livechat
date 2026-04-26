@@ -48,7 +48,7 @@ class Carno_Livechat_Admin {
         wp_enqueue_script(
             $this->plugin_name . '-admin',
             CARNO_LIVECHAT_URL . 'assets/js/admin.js',
-            [ 'jquery' ],
+            [],
             $this->version,
             true
         );
