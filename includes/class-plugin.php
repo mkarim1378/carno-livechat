@@ -23,9 +23,8 @@ class Carno_Livechat {
         require_once CARNO_LIVECHAT_PATH . 'includes/class-loader.php';
         require_once CARNO_LIVECHAT_PATH . 'database/class-database.php';
 
-        // Admin classes — loaded in Phase 8
-        // require_once CARNO_LIVECHAT_PATH . 'admin/class-admin.php';
-        // require_once CARNO_LIVECHAT_PATH . 'admin/class-admin-ajax.php';
+        require_once CARNO_LIVECHAT_PATH . 'admin/class-admin.php';
+        require_once CARNO_LIVECHAT_PATH . 'admin/class-admin-ajax.php';
 
         require_once CARNO_LIVECHAT_PATH . 'public/class-public.php';
         require_once CARNO_LIVECHAT_PATH . 'public/class-public-ajax.php';
@@ -34,7 +33,15 @@ class Carno_Livechat {
     }
 
     private function define_admin_hooks() {
-        // Wired in Phase 8 when Carno_Livechat_Admin is available
+        $admin      = new Carno_Livechat_Admin( $this->plugin_name, $this->version );
+        $admin_ajax = new Carno_Livechat_Admin_Ajax();
+
+        $this->loader->add_action( 'admin_menu',            $admin, 'add_menu_page' );
+        $this->loader->add_action( 'admin_enqueue_scripts', $admin, 'enqueue_styles' );
+        $this->loader->add_action( 'admin_enqueue_scripts', $admin, 'enqueue_scripts' );
+
+        $this->loader->add_action( 'wp_ajax_livechat_broadcast',    $admin_ajax, 'send_broadcast' );
+        $this->loader->add_action( 'wp_ajax_livechat_online_count', $admin_ajax, 'get_online_count' );
     }
 
     private function define_public_hooks() {

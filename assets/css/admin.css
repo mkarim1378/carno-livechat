@@ -1,1 +1,99 @@
-/* Carno LiveChat — Admin styles (Phase 8) */
+/* ==========================================================================
+   Carno LiveChat — Admin Panel
+   ========================================================================== */
+
+.clc-admin {
+    max-width: 680px;
+}
+
+.clc-admin h1 {
+    margin-bottom: 24px;
+}
+
+/* --------------------------------------------------------------------------
+   Stats bar
+   -------------------------------------------------------------------------- */
+
+.clc-admin__stats {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px 20px;
+    margin-bottom: 28px;
+    font-size: 14px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.clc-admin__stat-label {
+    color: #555;
+}
+
+.clc-admin__stats strong {
+    font-size: 22px;
+    color: #0073aa;
+    min-width: 28px;
+    text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   Broadcast form
+   -------------------------------------------------------------------------- */
+
+.clc-admin__form {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.clc-admin__form label {
+    display: block;
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.clc-admin__form textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+    box-sizing: border-box;
+    margin-bottom: 14px;
+    transition: border-color 0.2s;
+}
+
+.clc-admin__form textarea:focus {
+    border-color: #0073aa;
+    outline: none;
+}
+
+.clc-admin__form .button-primary {
+    min-width: 140px;
+}
+
+/* --------------------------------------------------------------------------
+   Feedback message
+   -------------------------------------------------------------------------- */
+
+.clc-admin__feedback {
+    margin: 12px 0 0;
+    font-size: 13px;
+    min-height: 20px;
+}
+
+.clc-admin__feedback--ok {
+    color: #46b450;
+}
+
+.clc-admin__feedback--error {
+    color: #dc3232;
+}

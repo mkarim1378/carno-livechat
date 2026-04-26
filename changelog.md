@@ -5,6 +5,18 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [1.7.0] - 2026-04-26
+
+- Created `admin/class-admin.php` — registers admin menu page under `dashicons-megaphone`, enqueues admin assets only on the plugin's own admin page via `$page_hook` comparison
+- Created `admin/class-admin-ajax.php` — `send_broadcast()` validates nonce + `manage_options` cap, sanitizes message, inserts via `Database::insert_message()`; `get_online_count()` returns count of users active in last 60s
+- Created `templates/admin/broadcast-panel.php` — online user counter display, broadcast textarea, send button, feedback message area
+- Written `assets/css/admin.css` — stats bar, broadcast form, ok/error feedback colors
+- Written `assets/js/admin.js` — sends broadcast via AJAX, shows Persian success/error feedback, polls online count every 10s; all strings stay in the DOM for i18n
+- Wired admin hooks in `class-plugin.php`: `admin_menu`, `admin_enqueue_scripts`, `wp_ajax_livechat_broadcast`, `wp_ajax_livechat_online_count`
+- Loaded `admin/class-admin.php` and `admin/class-admin-ajax.php` in `load_dependencies()`
+
+---
+
 ## [1.6.0] - 2026-04-26
 
 - Added `get_messages()` to `Carno_Livechat_Public_Ajax` — nonce-validated, reads `last_id` from POST, returns messages via `Database::get_messages_since()`
