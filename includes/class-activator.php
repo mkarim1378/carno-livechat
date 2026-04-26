@@ -7,6 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Carno_Livechat_Activator {
 
     public static function activate() {
-        // Database table creation is handled in Phase 2
+        require_once CARNO_LIVECHAT_PATH . 'database/class-database.php';
+        Carno_Livechat_Database::create_tables();
     }
 }
