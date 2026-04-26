@@ -1,7 +1,7 @@
 WordPress Broadcast Chat Plugin - Project Phases
 
 Phase 1 – Project Initialization
-- Create base plugin folder structure
+- Create base plugin folder structure (based on the file arch.md)
 - Create main plugin bootstrap file
 - Define constants (plugin path, URL, version)
 - Register activation and deactivation hooks
