@@ -5,6 +5,21 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [1.5.0] - 2026-04-26
+
+- Created `public/class-public-ajax.php` with `Carno_Livechat_Public_Ajax` class
+- Implemented `register_user()` — nonce-validated, sanitizes name/session_id/page_url, upserts user via `Database::insert_user()`
+- Implemented `heartbeat()` — nonce-validated, updates `last_seen` via `Database::update_last_seen()`
+- Implemented `get_client_ip()` — checks CF, X-Forwarded-For, X-Real-IP, REMOTE_ADDR in order; validates with `filter_var(FILTER_VALIDATE_IP)`
+- Wired four AJAX actions in `class-plugin.php`: `livechat_register` and `livechat_heartbeat` for both `nopriv` and authenticated users
+- Created `assets/js/public/session.js` — UUID v4 generator, localStorage read/write/clear via `CarnoLC.Session`
+- Created `assets/js/public/modal.js` — shows modal, handles name submit + Enter key, calls `livechat_register`, saves session on success
+- Created `assets/js/public/heartbeat.js` — `CarnoLC.Heartbeat.start(sessionId)` pings `livechat_heartbeat` every 20s
+- Updated `assets/js/public/main.js` — on DOM ready: checks localStorage for existing session (returning visitor) or shows modal (new visitor), then boots heartbeat
+- Updated `enqueue_scripts()` in `class-public.php` — enqueues `session.js`, `modal.js`, `heartbeat.js`, `main.js` with proper dependency chain via `jquery`
+
+---
+
 ## [1.4.0] - 2026-04-26
 
 - Created `templates/public/chat-widget.php` — full RTL chat UI template with name modal and chat container

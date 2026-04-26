@@ -32,11 +32,18 @@ class Carno_Livechat_Public {
             return;
         }
 
+        $base = CARNO_LIVECHAT_URL . 'assets/js/public/';
+        $ver  = $this->version;
+
+        wp_enqueue_script( 'clc-session',   $base . 'session.js',   [ 'jquery' ],                                    $ver, true );
+        wp_enqueue_script( 'clc-modal',     $base . 'modal.js',     [ 'jquery', 'clc-session' ],                     $ver, true );
+        wp_enqueue_script( 'clc-heartbeat', $base . 'heartbeat.js', [ 'jquery', 'clc-session' ],                     $ver, true );
+        // clc-chat and clc-polling enqueued in Phase 7
         wp_enqueue_script(
             $this->plugin_name,
-            CARNO_LIVECHAT_URL . 'assets/js/public/main.js',
-            [],
-            $this->version,
+            $base . 'main.js',
+            [ 'jquery', 'clc-session', 'clc-modal', 'clc-heartbeat' ],
+            $ver,
             true
         );
 
@@ -44,10 +51,10 @@ class Carno_Livechat_Public {
             $this->plugin_name,
             'CarnoLivechat',
             [
-                'ajax_url'          => admin_url( 'admin-ajax.php' ),
-                'nonce'             => wp_create_nonce( 'carno_livechat_nonce' ),
-                'polling_interval'  => 5000,
-                'heartbeat_interval'=> 20000,
+                'ajax_url'           => admin_url( 'admin-ajax.php' ),
+                'nonce'              => wp_create_nonce( 'carno_livechat_nonce' ),
+                'polling_interval'   => 5000,
+                'heartbeat_interval' => 20000,
             ]
         );
     }
