@@ -174,4 +174,32 @@ class Carno_Livechat_Database {
             )
         );
     }
+
+    public static function get_all_messages( $limit = 50 ) {
+        global $wpdb;
+
+        return $wpdb->get_results(
+            $wpdb->prepare(
+                'SELECT id, message, sent_by, created_at FROM ' . self::messages_table() .
+                ' ORDER BY id DESC LIMIT %d',
+                absint( $limit )
+            )
+        );
+    }
+
+    public static function delete_message( $id ) {
+        global $wpdb;
+
+        $wpdb->delete(
+            self::messages_table(),
+            [ 'id' => absint( $id ) ],
+            [ '%d' ]
+        );
+    }
+
+    public static function delete_all_messages() {
+        global $wpdb;
+
+        $wpdb->query( 'TRUNCATE TABLE ' . self::messages_table() );
+    }
 }

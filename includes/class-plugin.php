@@ -42,9 +42,12 @@ class Carno_Livechat {
         $this->loader->add_action( 'admin_enqueue_scripts', $admin, 'enqueue_styles' );
         $this->loader->add_action( 'admin_enqueue_scripts', $admin, 'enqueue_scripts' );
 
-        $this->loader->add_action( 'wp_ajax_livechat_broadcast',    $admin_ajax, 'send_broadcast' );
-        $this->loader->add_action( 'wp_ajax_livechat_online_count', $admin_ajax, 'get_online_count' );
-        $this->loader->add_action( 'carno_livechat_cleanup',        $cron,       'run_cleanup' );
+        $this->loader->add_action( 'wp_ajax_livechat_broadcast',          $admin_ajax, 'send_broadcast' );
+        $this->loader->add_action( 'wp_ajax_livechat_online_count',       $admin_ajax, 'get_online_count' );
+        $this->loader->add_action( 'wp_ajax_livechat_admin_get_messages', $admin_ajax, 'get_messages' );
+        $this->loader->add_action( 'wp_ajax_livechat_delete_message',     $admin_ajax, 'delete_message' );
+        $this->loader->add_action( 'wp_ajax_livechat_delete_all_messages',$admin_ajax, 'delete_all_messages' );
+        $this->loader->add_action( 'carno_livechat_cleanup',              $cron,       'run_cleanup' );
     }
 
     private function define_public_hooks() {

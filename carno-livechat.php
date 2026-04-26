@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Carno LiveChat
  * Description: One-way admin broadcast chat system presented as a chat UI.
- * Version:     1.9.3
+ * Version:     2.0.0
  * Author:      سپهر علیمحمدی
  * Author-URI:  https://sepehralimohammadi.com
  * Text Domain: carno-livechat
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'CARNO_LIVECHAT_VERSION',  '1.9.3' );
+define( 'CARNO_LIVECHAT_VERSION',  '2.0.0' );
 define( 'CARNO_LIVECHAT_FILE',     __FILE__ );
 define( 'CARNO_LIVECHAT_PATH',     plugin_dir_path( __FILE__ ) );
 define( 'CARNO_LIVECHAT_URL',      plugin_dir_url( __FILE__ ) );

@@ -30,6 +30,10 @@
         xhr.send(body);
     }
 
+    // -------------------------------------------------------------------------
+    // Online count
+    // -------------------------------------------------------------------------
+
     function fetchOnlineCount() {
         post(
             { action: 'livechat_online_count', nonce: CarnoLivechatAdmin.nonce },
@@ -42,52 +46,138 @@
         );
     }
 
+    // -------------------------------------------------------------------------
+    // Message list
+    // -------------------------------------------------------------------------
+
+    function formatTime(datetime) {
+        if (!datetime) return '';
+        var parts = datetime.split(' ');
+        return parts.length >= 2 ? parts[0] + ' ' + parts[1].substring(0, 5) : datetime;
+    }
+
+    function renderMessageList(messages) {
+        var list = document.getElementById('clc-message-list');
+        if (!list) return;
+
+        list.innerHTML = '';
+
+        if (!messages || !messages.length) {
+            list.innerHTML = '<p class="clc-admin__list-empty">No messages yet.</p>';
+            return;
+        }
+
+        messages.forEach(function (msg) {
+            var row = document.createElement('div');
+            row.className = 'clc-admin__message-row';
+            row.dataset.id = msg.id;
+
+            var text = document.createElement('span');
+            text.className = 'clc-admin__message-text';
+            text.textContent = msg.message;
+
+            var meta = document.createElement('span');
+            meta.className = 'clc-admin__message-meta';
+            meta.textContent = formatTime(msg.created_at);
+
+            var btn = document.createElement('button');
+            btn.className = 'button clc-admin__btn-danger clc-admin__btn-delete';
+            btn.textContent = 'حذف';
+            btn.dataset.id = msg.id;
+
+            btn.addEventListener('click', function () {
+                deleteMessage(parseInt(btn.dataset.id, 10), row);
+            });
+
+            row.appendChild(text);
+            row.appendChild(meta);
+            row.appendChild(btn);
+            list.appendChild(row);
+        });
+    }
+
+    function fetchMessages() {
+        post(
+            { action: 'livechat_admin_get_messages', nonce: CarnoLivechatAdmin.nonce },
+            function (res) {
+                if (res.success) renderMessageList(res.data.messages);
+            }
+        );
+    }
+
+    function deleteMessage(id, rowEl) {
+        post(
+            { action: 'livechat_delete_message', nonce: CarnoLivechatAdmin.nonce, message_id: id },
+            function (res) {
+                if (res.success && rowEl) {
+                    rowEl.parentNode.removeChild(rowEl);
+                    var list = document.getElementById('clc-message-list');
+                    if (list && !list.querySelector('.clc-admin__message-row')) {
+                        list.innerHTML = '<p class="clc-admin__list-empty">No messages yet.</p>';
+                    }
+                }
+            }
+        );
+    }
+
+    // -------------------------------------------------------------------------
+    // Broadcast send
+    // -------------------------------------------------------------------------
+
     document.addEventListener('DOMContentLoaded', function () {
         var btn      = document.getElementById('clc-broadcast-send');
         var textarea = document.getElementById('clc-broadcast-message');
         var feedback = document.getElementById('clc-broadcast-feedback');
+        var deleteAllBtn = document.getElementById('clc-delete-all');
 
-        if (!btn || !textarea || !feedback) return;
+        if (btn && textarea && feedback) {
+            btn.addEventListener('click', function () {
+                var message = textarea.value.trim();
+                if (!message) { textarea.focus(); return; }
 
-        btn.addEventListener('click', function () {
-            var message = textarea.value.trim();
+                btn.disabled    = true;
+                feedback.textContent = '';
+                feedback.className   = 'clc-admin__feedback';
 
-            if (!message) {
-                textarea.focus();
-                return;
-            }
-
-            btn.disabled = true;
-            feedback.textContent = '';
-            feedback.className   = 'clc-admin__feedback';
-
-            post(
-                {
-                    action:  'livechat_broadcast',
-                    nonce:   CarnoLivechatAdmin.nonce,
-                    message: message
-                },
-                function (res) {
-                    if (res.success) {
-                        textarea.value       = '';
-                        feedback.textContent = 'پیام با موفقیت ارسال شد.';
-                        feedback.className   = 'clc-admin__feedback clc-admin__feedback--ok';
-                    } else {
+                post(
+                    { action: 'livechat_broadcast', nonce: CarnoLivechatAdmin.nonce, message: message },
+                    function (res) {
+                        if (res.success) {
+                            textarea.value       = '';
+                            feedback.textContent = 'پیام با موفقیت ارسال شد.';
+                            feedback.className   = 'clc-admin__feedback clc-admin__feedback--ok';
+                            fetchMessages();
+                        } else {
+                            feedback.textContent = 'خطا در ارسال پیام.';
+                            feedback.className   = 'clc-admin__feedback clc-admin__feedback--error';
+                        }
+                        btn.disabled = false;
+                    },
+                    function () {
                         feedback.textContent = 'خطا در ارسال پیام.';
                         feedback.className   = 'clc-admin__feedback clc-admin__feedback--error';
+                        btn.disabled = false;
                     }
-                    btn.disabled = false;
-                },
-                function () {
-                    feedback.textContent = 'خطا در ارسال پیام.';
-                    feedback.className   = 'clc-admin__feedback clc-admin__feedback--error';
-                    btn.disabled = false;
-                }
-            );
-        });
+                );
+            });
+        }
+
+        if (deleteAllBtn) {
+            deleteAllBtn.addEventListener('click', function () {
+                if (!window.confirm('Are you sure you want to delete all messages? This cannot be undone.')) return;
+
+                post(
+                    { action: 'livechat_delete_all_messages', nonce: CarnoLivechatAdmin.nonce },
+                    function (res) {
+                        if (res.success) fetchMessages();
+                    }
+                );
+            });
+        }
 
         fetchOnlineCount();
         setInterval(fetchOnlineCount, 10000);
+        fetchMessages();
     });
 
 }());

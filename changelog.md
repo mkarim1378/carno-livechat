@@ -5,6 +5,21 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [2.0.0] - 2026-04-26
+
+- Added `Database::get_all_messages($limit)` — fetches messages ordered newest first for admin display
+- Added `Database::delete_message($id)` — deletes single message by ID via `$wpdb->delete()`
+- Added `Database::delete_all_messages()` — truncates messages table
+- Added `Admin_Ajax::get_messages()` — nonce + cap validated, returns last 50 messages
+- Added `Admin_Ajax::delete_message()` — nonce + cap validated, deletes single message by POST `message_id`
+- Added `Admin_Ajax::delete_all_messages()` — nonce + cap validated, truncates table; requires `confirm()` in JS
+- Wired three new AJAX actions in `class-plugin.php`: `livechat_admin_get_messages`, `livechat_delete_message`, `livechat_delete_all_messages`
+- Updated `broadcast-panel.php` — added "Sent Messages" section with message list container and "Delete All" button
+- Updated `admin.js` — `fetchMessages()` loads and renders message list; each row has inline delete button; after broadcast send, list refreshes; "Delete All" shows native `confirm()` dialog before executing
+- Updated `admin.css` — message row layout, danger button style, empty state, meta timestamp styling
+
+---
+
 ## [1.9.3] - 2026-04-26
 
 - Fixed modal stuck open on returning visits — root cause: `.clc-modal` had `display: flex` in CSS by default, so it was always visible on page load; for returning visitors `Modal.hide()` was never called, leaving the modal visible but without any event listener on the button

@@ -40,4 +40,16 @@ if ( ! current_user_can( 'manage_options' ) ) {
         <p id="clc-broadcast-feedback" class="clc-admin__feedback"></p>
     </div>
 
+    <div class="clc-admin__message-list-wrap">
+        <div class="clc-admin__message-list-header">
+            <h2><?php esc_html_e( 'Sent Messages', 'carno-livechat' ); ?></h2>
+            <button id="clc-delete-all" class="button clc-admin__btn-danger">
+                <?php esc_html_e( 'Delete All', 'carno-livechat' ); ?>
+            </button>
+        </div>
+        <div id="clc-message-list">
+            <p class="clc-admin__list-empty"><?php esc_html_e( 'No messages yet.', 'carno-livechat' ); ?></p>
+        </div>
+    </div>
+
 </div>
