@@ -5,6 +5,14 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [1.9.3] - 2026-04-26
+
+- Fixed modal stuck open on returning visits — root cause: `.clc-modal` had `display: flex` in CSS by default, so it was always visible on page load; for returning visitors `Modal.hide()` was never called, leaving the modal visible but without any event listener on the button
+- Changed `.clc-modal` CSS default to `display: none`; `Modal.show()` sets it to `display: flex` only for new visitors
+- Added explicit `CarnoLC.Modal.hide()` call in `main.js` for returning visitors as an additional safeguard
+
+---
+
 ## [1.9.2] - 2026-04-26
 
 - Removed jQuery dependency from all JS files — plugin now uses zero third-party JS

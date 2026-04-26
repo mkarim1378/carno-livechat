@@ -17,6 +17,8 @@
         var session = CarnoLC.Session.get();
 
         if (session && session.session_id) {
+            CarnoLC.Modal.hide();
+
             CarnoLC._post(CarnoLivechat.ajax_url, {
                 action:     'livechat_register',
                 nonce:      CarnoLivechat.nonce,
