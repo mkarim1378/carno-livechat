@@ -15,6 +15,7 @@ class Carno_Livechat {
         $this->version     = CARNO_LIVECHAT_VERSION;
 
         $this->load_dependencies();
+        Carno_Livechat_Database::maybe_upgrade();
         $this->define_admin_hooks();
         $this->define_public_hooks();
     }

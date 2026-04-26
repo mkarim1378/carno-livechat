@@ -53,13 +53,13 @@
 }
 
 .clc-modal__box input[type="text"]:focus {
-    border-color: #0073aa;
+    border-color: #2c2d74;
 }
 
 .clc-modal__box button {
     width: 100%;
     padding: 11px;
-    background: #0073aa;
+    background: #2c2d74;
     color: #ffffff;
     border: none;
     border-radius: 8px;
@@ -70,7 +70,7 @@
 }
 
 .clc-modal__box button:hover {
-    background: #005f8a;
+    background: #14155c;
 }
 
 /* --------------------------------------------------------------------------
@@ -103,7 +103,7 @@
 /* Header */
 
 .clc-chat__header {
-    background: #0073aa;
+    background: #2c2d74;
     color: #ffffff;
     padding: 14px 20px;
     font-size: 15px;

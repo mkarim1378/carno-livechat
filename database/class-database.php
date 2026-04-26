@@ -45,6 +45,7 @@ class Carno_Livechat_Database {
             id         BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
             message    TEXT            NOT NULL,
             sent_by    VARCHAR(100)    NOT NULL DEFAULT 'admin',
+            is_deleted TINYINT(1)      NOT NULL DEFAULT 0,
             created_at DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (id),
             KEY idx_created_at (created_at)
@@ -53,6 +54,17 @@ class Carno_Livechat_Database {
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         dbDelta( $sql_users );
         dbDelta( $sql_messages );
+    }
+
+    public static function maybe_upgrade() {
+        global $wpdb;
+
+        $table = self::messages_table();
+        $col   = $wpdb->get_var( "SHOW COLUMNS FROM `{$table}` LIKE 'is_deleted'" );
+
+        if ( ! $col ) {
+            $wpdb->query( "ALTER TABLE `{$table}` ADD COLUMN `is_deleted` TINYINT(1) NOT NULL DEFAULT 0" );
+        }
     }
 
     // -------------------------------------------------------------------------
@@ -173,7 +185,7 @@ class Carno_Livechat_Database {
             return $wpdb->get_results(
                 $wpdb->prepare(
                     'SELECT id, message, sent_by, created_at FROM ' . self::messages_table() .
-                    ' ORDER BY id ASC LIMIT %d',
+                    ' WHERE is_deleted = 0 ORDER BY id ASC LIMIT %d',
                     $limit
                 )
             );
@@ -182,11 +194,21 @@ class Carno_Livechat_Database {
         return $wpdb->get_results(
             $wpdb->prepare(
                 'SELECT id, message, sent_by, created_at FROM ' . self::messages_table() .
-                ' WHERE id > %d ORDER BY id ASC LIMIT %d',
+                ' WHERE id > %d AND is_deleted = 0 ORDER BY id ASC LIMIT %d',
                 $last_id,
                 $limit
             )
         );
+    }
+
+    public static function get_deleted_ids() {
+        global $wpdb;
+
+        $results = $wpdb->get_col(
+            'SELECT id FROM ' . self::messages_table() . ' WHERE is_deleted = 1'
+        );
+
+        return array_map( 'intval', $results );
     }
 
     public static function get_all_messages( $limit = 50 ) {
@@ -195,7 +217,7 @@ class Carno_Livechat_Database {
         return $wpdb->get_results(
             $wpdb->prepare(
                 'SELECT id, message, sent_by, created_at FROM ' . self::messages_table() .
-                ' ORDER BY id DESC LIMIT %d',
+                ' WHERE is_deleted = 0 ORDER BY id DESC LIMIT %d',
                 absint( $limit )
             )
         );
@@ -204,9 +226,11 @@ class Carno_Livechat_Database {
     public static function delete_message( $id ) {
         global $wpdb;
 
-        $wpdb->delete(
+        $wpdb->update(
             self::messages_table(),
-            [ 'id' => absint( $id ) ],
+            [ 'is_deleted' => 1 ],
+            [ 'id'         => absint( $id ) ],
+            [ '%d' ],
             [ '%d' ]
         );
     }
@@ -214,6 +238,6 @@ class Carno_Livechat_Database {
     public static function delete_all_messages() {
         global $wpdb;
 
-        $wpdb->query( 'TRUNCATE TABLE ' . self::messages_table() );
+        $wpdb->query( 'UPDATE ' . self::messages_table() . ' SET is_deleted = 1' );
     }
 }

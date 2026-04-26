@@ -5,6 +5,22 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [2.2.0] - 2026-04-26
+
+- Switched message deletion from hard-delete to soft-delete via `is_deleted` column on `wp_livechat_messages`
+- Added `is_deleted TINYINT(1) DEFAULT 0` to messages table schema
+- Added `Database::maybe_upgrade()` — checks for `is_deleted` column via `SHOW COLUMNS` and runs `ALTER TABLE` if missing; called on every plugin load for zero-downtime schema migration
+- Updated `Database::delete_message()` — now `UPDATE SET is_deleted = 1` instead of `DELETE`
+- Updated `Database::delete_all_messages()` — now `UPDATE SET is_deleted = 1` instead of `TRUNCATE`
+- Updated `Database::get_messages_since()` — filters `WHERE is_deleted = 0`
+- Updated `Database::get_all_messages()` — filters `WHERE is_deleted = 0`
+- Added `Database::get_deleted_ids()` — returns all IDs where `is_deleted = 1`
+- Updated `Public_Ajax::get_messages()` — now returns `{ messages, deleted_ids }` in response
+- Updated `chat.js` — added `data-id` attribute to bubbles; added `removeDeleted(ids)` method that removes bubbles by data-id and restores empty state if no messages remain
+- Updated `polling.js` — after each fetch, calls `CarnoLC.Chat.removeDeleted(deleted_ids)` so deleted messages disappear from active users' view within one poll cycle (~5s)
+
+---
+
 ## [2.1.0] - 2026-04-26
 
 - Added `Database::get_all_users($limit)` — fetches users ordered by `last_seen DESC` with computed `is_online` column (1 if last_seen within 60s)

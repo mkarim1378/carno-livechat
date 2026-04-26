@@ -41,9 +41,15 @@
                     last_id: self._lastId
                 },
                 function (res) {
-                    if (res.success && res.data.messages && res.data.messages.length) {
-                        CarnoLC.Chat.render(res.data.messages);
-                        self._lastId = parseInt(res.data.messages[res.data.messages.length - 1].id, 10);
+                    if (res.success) {
+                        if (res.data.messages && res.data.messages.length) {
+                            CarnoLC.Chat.render(res.data.messages);
+                            self._lastId = parseInt(res.data.messages[res.data.messages.length - 1].id, 10);
+                        }
+
+                        if (res.data.deleted_ids && res.data.deleted_ids.length) {
+                            CarnoLC.Chat.removeDeleted(res.data.deleted_ids);
+                        }
                     }
                     self._fetching = false;
                 },

@@ -40,9 +40,13 @@ class Carno_Livechat_Public_Ajax {
 
         $last_id = isset( $_POST['last_id'] ) ? absint( $_POST['last_id'] ) : 0;
 
-        $messages = Carno_Livechat_Database::get_messages_since( $last_id );
+        $messages    = Carno_Livechat_Database::get_messages_since( $last_id );
+        $deleted_ids = Carno_Livechat_Database::get_deleted_ids();
 
-        wp_send_json_success( [ 'messages' => $messages ] );
+        wp_send_json_success( [
+            'messages'    => $messages,
+            'deleted_ids' => $deleted_ids,
+        ] );
     }
 
     public function heartbeat() {

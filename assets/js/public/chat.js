@@ -14,14 +14,15 @@
 
             messages.forEach(function (msg) {
                 var bubble = document.createElement('div');
-                bubble.className = 'clc-message';
+                bubble.className    = 'clc-message';
+                bubble.dataset.id   = msg.id;
 
                 var text = document.createElement('span');
-                text.className = 'clc-message__text';
+                text.className   = 'clc-message__text';
                 text.textContent = msg.message;
 
                 var meta = document.createElement('span');
-                meta.className = 'clc-message__meta';
+                meta.className   = 'clc-message__meta';
                 meta.textContent = CarnoLC.Chat._formatTime(msg.created_at);
 
                 bubble.appendChild(text);
@@ -30,6 +31,25 @@
             });
 
             CarnoLC.Chat.scrollToBottom();
+        },
+
+        removeDeleted: function (deletedIds) {
+            if (!deletedIds || !deletedIds.length) return;
+
+            var list = document.getElementById('clc-messages');
+            if (!list) return;
+
+            deletedIds.forEach(function (id) {
+                var bubble = list.querySelector('[data-id="' + id + '"]');
+                if (bubble) bubble.parentNode.removeChild(bubble);
+            });
+
+            if (!list.querySelector('.clc-message')) {
+                var empty = document.createElement('p');
+                empty.className   = 'clc-chat__empty';
+                empty.textContent = 'هنوز پیامی ارسال نشده است.';
+                list.appendChild(empty);
+            }
         },
 
         scrollToBottom: function () {
