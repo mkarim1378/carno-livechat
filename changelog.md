@@ -5,6 +5,17 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [1.2.0] - 2026-04-26
+
+- Created `includes/class-loader.php` — hook/filter registration manager (`add_action`, `add_filter`, `run()`)
+- Refactored `includes/class-plugin.php` — added `load_dependencies()`, `define_admin_hooks()`, `define_public_hooks()` methods
+- `load_dependencies()` centralizes all `require_once` calls; future module requires are pre-stubbed as comments
+- `define_admin_hooks()` and `define_public_hooks()` are structured stubs ready to wire modules in upcoming phases
+- Added `get_loader()` accessor to expose the loader instance
+- Loader is instantiated inside `load_dependencies()` — not in the main file
+
+---
+
 ## [1.1.0] - 2026-04-26
 
 - Created `database/class-database.php` with full `Carno_Livechat_Database` class
