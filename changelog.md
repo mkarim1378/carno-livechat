@@ -5,6 +5,12 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [1.9.1] - 2026-04-26
+
+- Fixed duplicate message rendering in `polling.js` — added `_fetching` flag that blocks a new AJAX request if the previous one is still in-flight; flag is released in `.always()` regardless of success or failure
+
+---
+
 ## [1.9.0] - 2026-04-26
 
 **Security**

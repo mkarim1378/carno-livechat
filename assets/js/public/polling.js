@@ -5,8 +5,9 @@
 
     CarnoLC.Polling = {
 
-        _lastId: 0,
-        _timer:  null,
+        _lastId:   0,
+        _timer:    null,
+        _fetching: false,
 
         start: function () {
             this._fetch();
@@ -27,6 +28,11 @@
         },
 
         _fetch: function () {
+            if (this._fetching) {
+                return;
+            }
+
+            this._fetching = true;
             var self = this;
 
             $.post(CarnoLivechat.ajax_url, {
@@ -39,6 +45,9 @@
                     CarnoLC.Chat.render(res.data.messages);
                     self._lastId = parseInt(res.data.messages[res.data.messages.length - 1].id, 10);
                 }
+            })
+            .always(function () {
+                self._fetching = false;
             });
         }
     };
