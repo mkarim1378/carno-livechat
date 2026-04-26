@@ -47,6 +47,7 @@ class Carno_Livechat {
         $this->loader->add_action( 'wp_ajax_livechat_admin_get_messages', $admin_ajax, 'get_messages' );
         $this->loader->add_action( 'wp_ajax_livechat_delete_message',     $admin_ajax, 'delete_message' );
         $this->loader->add_action( 'wp_ajax_livechat_delete_all_messages',$admin_ajax, 'delete_all_messages' );
+        $this->loader->add_action( 'wp_ajax_livechat_get_users',          $admin_ajax, 'get_users' );
         $this->loader->add_action( 'carno_livechat_cleanup',              $cron,       'run_cleanup' );
     }
 

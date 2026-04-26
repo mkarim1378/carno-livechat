@@ -5,6 +5,17 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [2.1.0] - 2026-04-26
+
+- Added `Database::get_all_users($limit)` — fetches users ordered by `last_seen DESC` with computed `is_online` column (1 if last_seen within 60s)
+- Added `Admin_Ajax::get_users()` — nonce + cap validated, returns up to 100 users
+- Wired `wp_ajax_livechat_get_users` in `class-plugin.php`
+- Updated `broadcast-panel.php` — added "Registered Users" table section with Name, First Visit, Last Visit, Status columns and a Refresh button
+- Updated `admin.js` — `fetchUsers()` fetches and renders user rows; online/offline badge per user; Refresh button wired; users fetched on page load
+- Updated `admin.css` — user table styles, online badge (green), offline badge (grey)
+
+---
+
 ## [2.0.0] - 2026-04-26
 
 - Added `Database::get_all_messages($limit)` — fetches messages ordered newest first for admin display

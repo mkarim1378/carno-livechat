@@ -120,6 +120,20 @@ class Carno_Livechat_Database {
         );
     }
 
+    public static function get_all_users( $limit = 100 ) {
+        global $wpdb;
+
+        return $wpdb->get_results(
+            $wpdb->prepare(
+                'SELECT id, name, created_at, last_seen,
+                    CASE WHEN last_seen >= DATE_SUB(NOW(), INTERVAL 60 SECOND) THEN 1 ELSE 0 END AS is_online
+                 FROM ' . self::users_table() .
+                ' ORDER BY last_seen DESC LIMIT %d',
+                absint( $limit )
+            )
+        );
+    }
+
     public static function count_online_users() {
         global $wpdb;
 

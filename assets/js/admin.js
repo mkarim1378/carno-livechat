@@ -47,6 +47,56 @@
     }
 
     // -------------------------------------------------------------------------
+    // User list
+    // -------------------------------------------------------------------------
+
+    function renderUserList(users) {
+        var tbody = document.getElementById('clc-user-list');
+        if (!tbody) return;
+
+        tbody.innerHTML = '';
+
+        if (!users || !users.length) {
+            tbody.innerHTML = '<tr><td colspan="4" class="clc-admin__list-empty">No users yet.</td></tr>';
+            return;
+        }
+
+        users.forEach(function (user) {
+            var tr = document.createElement('tr');
+
+            var tdName = document.createElement('td');
+            tdName.textContent = user.name;
+
+            var tdFirst = document.createElement('td');
+            tdFirst.textContent = formatTime(user.created_at);
+
+            var tdLast = document.createElement('td');
+            tdLast.textContent = formatTime(user.last_seen);
+
+            var tdStatus = document.createElement('td');
+            var badge = document.createElement('span');
+            badge.textContent  = user.is_online === '1' ? 'Online' : 'Offline';
+            badge.className    = user.is_online === '1' ? 'clc-admin__badge clc-admin__badge--online' : 'clc-admin__badge clc-admin__badge--offline';
+            tdStatus.appendChild(badge);
+
+            tr.appendChild(tdName);
+            tr.appendChild(tdFirst);
+            tr.appendChild(tdLast);
+            tr.appendChild(tdStatus);
+            tbody.appendChild(tr);
+        });
+    }
+
+    function fetchUsers() {
+        post(
+            { action: 'livechat_get_users', nonce: CarnoLivechatAdmin.nonce },
+            function (res) {
+                if (res.success) renderUserList(res.data.users);
+            }
+        );
+    }
+
+    // -------------------------------------------------------------------------
     // Message list
     // -------------------------------------------------------------------------
 
@@ -175,8 +225,14 @@
             });
         }
 
+        var refreshUsersBtn = document.getElementById('clc-refresh-users');
+        if (refreshUsersBtn) {
+            refreshUsersBtn.addEventListener('click', fetchUsers);
+        }
+
         fetchOnlineCount();
         setInterval(fetchOnlineCount, 10000);
+        fetchUsers();
         fetchMessages();
     });
 

@@ -40,6 +40,28 @@ if ( ! current_user_can( 'manage_options' ) ) {
         <p id="clc-broadcast-feedback" class="clc-admin__feedback"></p>
     </div>
 
+    <div class="clc-admin__user-list-wrap">
+        <div class="clc-admin__message-list-header">
+            <h2><?php esc_html_e( 'Registered Users', 'carno-livechat' ); ?></h2>
+            <button id="clc-refresh-users" class="button">
+                <?php esc_html_e( 'Refresh', 'carno-livechat' ); ?>
+            </button>
+        </div>
+        <table class="clc-admin__user-table widefat striped">
+            <thead>
+                <tr>
+                    <th><?php esc_html_e( 'Name', 'carno-livechat' ); ?></th>
+                    <th><?php esc_html_e( 'First Visit', 'carno-livechat' ); ?></th>
+                    <th><?php esc_html_e( 'Last Visit', 'carno-livechat' ); ?></th>
+                    <th><?php esc_html_e( 'Status', 'carno-livechat' ); ?></th>
+                </tr>
+            </thead>
+            <tbody id="clc-user-list">
+                <tr><td colspan="4" class="clc-admin__list-empty"><?php esc_html_e( 'No users yet.', 'carno-livechat' ); ?></td></tr>
+            </tbody>
+        </table>
+    </div>
+
     <div class="clc-admin__message-list-wrap">
         <div class="clc-admin__message-list-header">
             <h2><?php esc_html_e( 'Sent Messages', 'carno-livechat' ); ?></h2>

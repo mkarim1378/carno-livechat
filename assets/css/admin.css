@@ -205,6 +205,46 @@
     line-height: 1.8;
 }
 
+/* --------------------------------------------------------------------------
+   User list
+   -------------------------------------------------------------------------- */
+
+.clc-admin__user-list-wrap {
+    margin-top: 24px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px 24px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.clc-admin__user-table {
+    margin-top: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.clc-admin__badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+}
+
+.clc-admin__badge--online {
+    background: #eafbea;
+    color: #46b450;
+    border: 1px solid #b5e8b5;
+}
+
+.clc-admin__badge--offline {
+    background: #f5f5f5;
+    color: #999;
+    border: 1px solid #e0e0e0;
+}
+
 .clc-admin__list-empty {
     color: #aaa;
     font-size: 13px;

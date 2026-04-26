@@ -70,6 +70,18 @@ class Carno_Livechat_Admin_Ajax {
         wp_send_json_success();
     }
 
+    public function get_users() {
+        check_ajax_referer( 'carno_livechat_admin_nonce', 'nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( [ 'message' => 'Unauthorized.' ], 403 );
+        }
+
+        $users = Carno_Livechat_Database::get_all_users( 100 );
+
+        wp_send_json_success( [ 'users' => $users ] );
+    }
+
     public function delete_all_messages() {
         check_ajax_referer( 'carno_livechat_admin_nonce', 'nonce' );
 
