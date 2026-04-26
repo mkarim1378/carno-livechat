@@ -11,6 +11,8 @@
                 return;
             }
 
+            $list.find('.clc-chat__empty').remove();
+
             $.each(messages, function (i, msg) {
                 var $bubble = $(
                     '<div class="clc-message">' +

@@ -2,7 +2,7 @@
     'use strict';
 
     function startChat(name, sessionId) {
-        $('#clc-chat').css('display', 'flex');
+        $('#clc-chat').addClass('clc-chat--visible');
         CarnoLC.Heartbeat.start(sessionId);
         CarnoLC.Polling.start();
     }

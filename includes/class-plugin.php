@@ -28,6 +28,7 @@ class Carno_Livechat {
 
         require_once CARNO_LIVECHAT_PATH . 'public/class-public.php';
         require_once CARNO_LIVECHAT_PATH . 'public/class-public-ajax.php';
+        require_once CARNO_LIVECHAT_PATH . 'includes/class-cron.php';
 
         $this->loader = new Carno_Livechat_Loader();
     }
@@ -35,6 +36,7 @@ class Carno_Livechat {
     private function define_admin_hooks() {
         $admin      = new Carno_Livechat_Admin( $this->plugin_name, $this->version );
         $admin_ajax = new Carno_Livechat_Admin_Ajax();
+        $cron       = new Carno_Livechat_Cron();
 
         $this->loader->add_action( 'admin_menu',            $admin, 'add_menu_page' );
         $this->loader->add_action( 'admin_enqueue_scripts', $admin, 'enqueue_styles' );
@@ -42,6 +44,7 @@ class Carno_Livechat {
 
         $this->loader->add_action( 'wp_ajax_livechat_broadcast',    $admin_ajax, 'send_broadcast' );
         $this->loader->add_action( 'wp_ajax_livechat_online_count', $admin_ajax, 'get_online_count' );
+        $this->loader->add_action( 'carno_livechat_cleanup',        $cron,       'run_cleanup' );
     }
 
     private function define_public_hooks() {

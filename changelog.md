@@ -5,6 +5,29 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [1.9.0] - 2026-04-26
+
+**Security**
+- Added UUID v4 format validation (`is_valid_uuid()`) in `class-public-ajax.php` — `register_user()` and `heartbeat()` reject malformed session IDs with 400
+- Added `mb_strlen` name length check (max 100 chars) in `register_user()`
+- Added `mb_strlen` message length check (max 2000 chars) in `send_broadcast()`
+- Completed `uninstall.php` — drops `wp_livechat_users` and `wp_livechat_messages` tables and clears cron on uninstall
+
+**Optimization**
+- Created `includes/class-cron.php` — `Carno_Livechat_Cron::run_cleanup()` calls `Database::delete_inactive_users(24)`
+- Added `Database::delete_inactive_users($hours)` — deletes users with `last_seen` older than N hours
+- Scheduled daily WP-Cron event `carno_livechat_cleanup` on activation; unscheduled on deactivation
+- Wired `carno_livechat_cleanup` action in `class-plugin.php`
+
+**UI Polish**
+- Removed `style="display:none"` from `#clc-chat` in template — visibility now controlled via CSS class
+- Added `.clc-chat { display:none }` default and `.clc-chat--visible { display:flex; opacity:1; transform:none }` with fade+slide-up transition (0.3s)
+- `main.js` now uses `addClass('clc-chat--visible')` instead of inline style
+- Added `.clc-chat__empty` empty state message — "هنوز پیامی ارسال نشده است"
+- `chat.js` removes empty state element on first message render
+
+---
+
 ## [1.8.0] - 2026-04-26
 
 - Updated `render_shortcode()` in `class-public.php` to accept `$atts` — supports `title` and `placeholder` attributes via `shortcode_atts()` with safe defaults

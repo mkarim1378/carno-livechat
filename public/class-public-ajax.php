@@ -17,6 +17,14 @@ class Carno_Livechat_Public_Ajax {
             wp_send_json_error( [ 'message' => 'Invalid data.' ], 400 );
         }
 
+        if ( mb_strlen( $name ) > 100 ) {
+            wp_send_json_error( [ 'message' => 'Name too long.' ], 400 );
+        }
+
+        if ( ! $this->is_valid_uuid( $session_id ) ) {
+            wp_send_json_error( [ 'message' => 'Invalid session format.' ], 400 );
+        }
+
         $user_id = Carno_Livechat_Database::insert_user(
             $name,
             $session_id,
@@ -42,13 +50,20 @@ class Carno_Livechat_Public_Ajax {
 
         $session_id = isset( $_POST['session_id'] ) ? sanitize_text_field( wp_unslash( $_POST['session_id'] ) ) : '';
 
-        if ( empty( $session_id ) ) {
+        if ( empty( $session_id ) || ! $this->is_valid_uuid( $session_id ) ) {
             wp_send_json_error( [ 'message' => 'Invalid session.' ], 400 );
         }
 
         Carno_Livechat_Database::update_last_seen( $session_id );
 
         wp_send_json_success();
+    }
+
+    private function is_valid_uuid( $uuid ) {
+        return (bool) preg_match(
+            '/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i',
+            $uuid
+        );
     }
 
     private function get_client_ip() {

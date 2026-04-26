@@ -7,6 +7,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Carno_Livechat_Deactivator {
 
     public static function deactivate() {
-        // Cleanup logic added as needed in later phases
+        wp_clear_scheduled_hook( 'carno_livechat_cleanup' );
     }
 }

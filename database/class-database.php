@@ -108,6 +108,18 @@ class Carno_Livechat_Database {
         );
     }
 
+    public static function delete_inactive_users( $hours = 24 ) {
+        global $wpdb;
+
+        $wpdb->query(
+            $wpdb->prepare(
+                'DELETE FROM ' . self::users_table() .
+                ' WHERE last_seen < DATE_SUB(NOW(), INTERVAL %d HOUR)',
+                absint( $hours )
+            )
+        );
+    }
+
     public static function count_online_users() {
         global $wpdb;
 

@@ -19,6 +19,10 @@ class Carno_Livechat_Admin_Ajax {
             wp_send_json_error( [ 'message' => 'Message cannot be empty.' ], 400 );
         }
 
+        if ( mb_strlen( $message ) > 2000 ) {
+            wp_send_json_error( [ 'message' => 'Message too long (max 2000 characters).' ], 400 );
+        }
+
         $id = Carno_Livechat_Database::insert_message( $message, 'admin' );
 
         wp_send_json_success( [ 'message_id' => $id ] );

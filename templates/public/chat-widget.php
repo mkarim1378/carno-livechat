@@ -24,13 +24,14 @@ $placeholder = isset( $placeholder ) ? $placeholder : __( 'نام شما', 'carn
         </div>
     </div>
 
-    <div id="clc-chat" class="clc-chat" style="display:none;">
+    <div id="clc-chat" class="clc-chat">
         <div class="clc-chat__header">
             <span class="clc-chat__title"><?php echo esc_html( $title ); ?></span>
             <span class="clc-chat__status"></span>
         </div>
 
         <div id="clc-messages" class="clc-chat__messages" role="log" aria-live="polite">
+            <p class="clc-chat__empty"><?php esc_html_e( 'هنوز پیامی ارسال نشده است.', 'carno-livechat' ); ?></p>
         </div>
 
         <div class="clc-chat__footer">
