@@ -5,6 +5,19 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [1.4.0] - 2026-04-26
+
+- Created `templates/public/chat-widget.php` — full RTL chat UI template with name modal and chat container
+- Modal: name input + submit button, all strings i18n-wrapped with `esc_html_e()` / `esc_attr_e()`
+- Chat container: header, scrollable message list (`aria-live="polite"`), disabled footer input
+- Disabled input placeholder: `گفتگو غیرفعال شده است`
+- Written full `assets/css/public.css` — modal overlay, chat container, message bubbles, disabled input, RTL layout, scrollbar styling
+- Added `render_shortcode()` to `Carno_Livechat_Public` — outputs template via `ob_start()`
+- Added `register_shortcode()` to `Carno_Livechat_Public` — registers `[livechat]` shortcode
+- Wired `init` hook for shortcode registration in `class-plugin.php`
+
+---
+
 ## [1.3.0] - 2026-04-26
 
 - Created `public/class-public.php` with `Carno_Livechat_Public` class

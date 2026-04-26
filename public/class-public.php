@@ -52,6 +52,16 @@ class Carno_Livechat_Public {
         );
     }
 
+    public function register_shortcode() {
+        add_shortcode( 'livechat', [ $this, 'render_shortcode' ] );
+    }
+
+    public function render_shortcode() {
+        ob_start();
+        include CARNO_LIVECHAT_PATH . 'templates/public/chat-widget.php';
+        return ob_get_clean();
+    }
+
     private function is_livechat_page() {
         global $post;
         return is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'livechat' );

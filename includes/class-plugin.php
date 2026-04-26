@@ -44,6 +44,7 @@ class Carno_Livechat {
 
         $this->loader->add_action( 'wp_enqueue_scripts', $public, 'enqueue_styles' );
         $this->loader->add_action( 'wp_enqueue_scripts', $public, 'enqueue_scripts' );
+        $this->loader->add_action( 'init',               $public, 'register_shortcode' );
     }
 
     public function run() {
