@@ -35,14 +35,15 @@ class Carno_Livechat_Public {
         $base = CARNO_LIVECHAT_URL . 'assets/js/public/';
         $ver  = $this->version;
 
-        wp_enqueue_script( 'clc-session',   $base . 'session.js',   [ 'jquery' ],                                    $ver, true );
-        wp_enqueue_script( 'clc-modal',     $base . 'modal.js',     [ 'jquery', 'clc-session' ],                     $ver, true );
-        wp_enqueue_script( 'clc-heartbeat', $base . 'heartbeat.js', [ 'jquery', 'clc-session' ],                     $ver, true );
-        // clc-chat and clc-polling enqueued in Phase 7
+        wp_enqueue_script( 'clc-session',   $base . 'session.js',   [ 'jquery' ],                                              $ver, true );
+        wp_enqueue_script( 'clc-modal',     $base . 'modal.js',     [ 'jquery', 'clc-session' ],                               $ver, true );
+        wp_enqueue_script( 'clc-heartbeat', $base . 'heartbeat.js', [ 'jquery', 'clc-session' ],                               $ver, true );
+        wp_enqueue_script( 'clc-chat',      $base . 'chat.js',      [ 'jquery' ],                                              $ver, true );
+        wp_enqueue_script( 'clc-polling',   $base . 'polling.js',   [ 'jquery', 'clc-chat' ],                                  $ver, true );
         wp_enqueue_script(
             $this->plugin_name,
             $base . 'main.js',
-            [ 'jquery', 'clc-session', 'clc-modal', 'clc-heartbeat' ],
+            [ 'jquery', 'clc-session', 'clc-modal', 'clc-heartbeat', 'clc-chat', 'clc-polling' ],
             $ver,
             true
         );

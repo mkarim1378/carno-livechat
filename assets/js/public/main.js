@@ -4,7 +4,7 @@
     function startChat(name, sessionId) {
         $('#clc-chat').css('display', 'flex');
         CarnoLC.Heartbeat.start(sessionId);
-        // CarnoLC.Polling.start() — wired in Phase 7
+        CarnoLC.Polling.start();
     }
 
     $(document).ready(function () {

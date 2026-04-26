@@ -47,8 +47,10 @@ class Carno_Livechat {
 
         $this->loader->add_action( 'wp_ajax_nopriv_livechat_register',  $public_ajax, 'register_user' );
         $this->loader->add_action( 'wp_ajax_livechat_register',         $public_ajax, 'register_user' );
-        $this->loader->add_action( 'wp_ajax_nopriv_livechat_heartbeat', $public_ajax, 'heartbeat' );
-        $this->loader->add_action( 'wp_ajax_livechat_heartbeat',        $public_ajax, 'heartbeat' );
+        $this->loader->add_action( 'wp_ajax_nopriv_livechat_heartbeat',     $public_ajax, 'heartbeat' );
+        $this->loader->add_action( 'wp_ajax_livechat_heartbeat',            $public_ajax, 'heartbeat' );
+        $this->loader->add_action( 'wp_ajax_nopriv_livechat_get_messages',  $public_ajax, 'get_messages' );
+        $this->loader->add_action( 'wp_ajax_livechat_get_messages',         $public_ajax, 'get_messages' );
     }
 
     public function run() {

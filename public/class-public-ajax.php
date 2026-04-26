@@ -27,6 +27,16 @@ class Carno_Livechat_Public_Ajax {
         wp_send_json_success( [ 'user_id' => $user_id ] );
     }
 
+    public function get_messages() {
+        check_ajax_referer( 'carno_livechat_nonce', 'nonce' );
+
+        $last_id = isset( $_POST['last_id'] ) ? absint( $_POST['last_id'] ) : 0;
+
+        $messages = Carno_Livechat_Database::get_messages_since( $last_id );
+
+        wp_send_json_success( [ 'messages' => $messages ] );
+    }
+
     public function heartbeat() {
         check_ajax_referer( 'carno_livechat_nonce', 'nonce' );
 

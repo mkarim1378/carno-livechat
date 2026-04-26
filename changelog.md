@@ -5,6 +5,17 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [1.6.0] - 2026-04-26
+
+- Added `get_messages()` to `Carno_Livechat_Public_Ajax` — nonce-validated, reads `last_id` from POST, returns messages via `Database::get_messages_since()`
+- Wired `livechat_get_messages` AJAX action for both `nopriv` and authenticated users in `class-plugin.php`
+- Created `assets/js/public/chat.js` — `CarnoLC.Chat.render()` appends message bubbles using `.text()` (XSS-safe), `scrollToBottom()` auto-scrolls message list, `_formatTime()` formats MySQL datetime to HH:MM
+- Created `assets/js/public/polling.js` — `CarnoLC.Polling.start()` fetches on load then polls every 5s, tracks `_lastId` to request only new messages, updates `_lastId` after each successful fetch
+- Updated `assets/js/public/main.js` — `startChat()` now calls `CarnoLC.Polling.start()`
+- Updated `enqueue_scripts()` in `class-public.php` — adds `clc-chat` and `clc-polling` to dependency chain before `main.js`
+
+---
+
 ## [1.5.0] - 2026-04-26
 
 - Created `public/class-public-ajax.php` with `Carno_Livechat_Public_Ajax` class
