@@ -5,6 +5,12 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [2.2.1] - 2026-04-27
+
+- Fixed duplicate empty-state accumulation — `removeDeleted` now checks for an existing `.clc-chat__empty` element before inserting a new one, preventing the "هنوز پیامی ارسال نشده است" message from stacking on every poll cycle when the chat is empty
+
+---
+
 ## [2.2.0] - 2026-04-26
 
 - Switched message deletion from hard-delete to soft-delete via `is_deleted` column on `wp_livechat_messages`

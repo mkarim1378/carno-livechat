@@ -44,7 +44,7 @@
                 if (bubble) bubble.parentNode.removeChild(bubble);
             });
 
-            if (!list.querySelector('.clc-message')) {
+            if (!list.querySelector('.clc-message') && !list.querySelector('.clc-chat__empty')) {
                 var empty = document.createElement('p');
                 empty.className   = 'clc-chat__empty';
                 empty.textContent = 'هنوز پیامی ارسال نشده است.';
