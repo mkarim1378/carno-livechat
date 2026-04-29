@@ -9,7 +9,7 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 - Added `CarnoLC.Chat.renderWelcome(name)` in `chat.js` — renders a one-time local welcome bubble ("سلام {name} عزیز، خوش آمدی!") for new users only; removes the empty-state element if present and scrolls to bottom
 - Updated `startChat()` in `main.js` — accepts optional third argument `showWelcome`; calls `renderWelcome` before polling starts so the message appears before history loads
-- Welcome call wired only for new visitors (inside `Modal.init` callback); returning visitors bypass it
+- Welcome message shown on every page load (new and returning visitors alike) — no database needed; name is always available from localStorage
 - Added `.clc-message--welcome` style in `public.css` — centered pill-shaped bubble with brand color
 
 ---

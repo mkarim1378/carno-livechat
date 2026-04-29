@@ -1,11 +1,11 @@
 (function () {
     'use strict';
 
-    function startChat(name, sessionId, showWelcome) {
+    function startChat(name, sessionId) {
         var chat = document.getElementById('clc-chat');
         if (chat) chat.classList.add('clc-chat--visible');
         CarnoLC.Heartbeat.start(sessionId);
-        if (showWelcome) CarnoLC.Chat.renderWelcome(name);
+        CarnoLC.Chat.renderWelcome(name);
         CarnoLC.Polling.start();
     }
 
@@ -33,7 +33,7 @@
         } else {
             CarnoLC.Modal.show();
             CarnoLC.Modal.init(function (name, sessionId) {
-                startChat(name, sessionId, true);
+                startChat(name, sessionId);
             });
         }
     });
