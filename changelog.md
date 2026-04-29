@@ -5,6 +5,15 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [2.3.0] - 2026-04-29
+
+- Added `CarnoLC.Chat.renderWelcome(name)` in `chat.js` — renders a one-time local welcome bubble ("سلام {name} عزیز، خوش آمدی!") for new users only; removes the empty-state element if present and scrolls to bottom
+- Updated `startChat()` in `main.js` — accepts optional third argument `showWelcome`; calls `renderWelcome` before polling starts so the message appears before history loads
+- Welcome call wired only for new visitors (inside `Modal.init` callback); returning visitors bypass it
+- Added `.clc-message--welcome` style in `public.css` — centered pill-shaped bubble with brand color
+
+---
+
 ## [2.2.1] - 2026-04-27
 
 - Fixed duplicate empty-state accumulation — `removeDeleted` now checks for an existing `.clc-chat__empty` element before inserting a new one, preventing the "هنوز پیامی ارسال نشده است" message from stacking on every poll cycle when the chat is empty

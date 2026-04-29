@@ -52,6 +52,21 @@
             }
         },
 
+        renderWelcome: function (name) {
+            var list = document.getElementById('clc-messages');
+            if (!list) return;
+
+            var empty = list.querySelector('.clc-chat__empty');
+            if (empty) empty.parentNode.removeChild(empty);
+
+            var bubble = document.createElement('div');
+            bubble.className = 'clc-message clc-message--welcome';
+            bubble.textContent = 'سلام ' + name + ' عزیز، خوش آمدی!';
+            list.appendChild(bubble);
+
+            CarnoLC.Chat.scrollToBottom();
+        },
+
         scrollToBottom: function () {
             var list = document.getElementById('clc-messages');
             if (list) list.scrollTop = list.scrollHeight;

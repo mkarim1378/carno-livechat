@@ -171,6 +171,20 @@
     direction: ltr;
 }
 
+/* Welcome message */
+
+.clc-message--welcome {
+    align-self: center;
+    background: #eef0fb;
+    border: 1px solid #d0d3f0;
+    border-radius: 20px;
+    padding: 8px 18px;
+    font-size: 13px;
+    color: #2c2d74;
+    max-width: 90%;
+    text-align: center;
+}
+
 /* Empty state */
 
 .clc-chat__empty {
