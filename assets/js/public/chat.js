@@ -59,9 +59,23 @@
             var empty = list.querySelector('.clc-chat__empty');
             if (empty) empty.parentNode.removeChild(empty);
 
+            var now = new Date();
+            var h   = String(now.getHours()).padStart(2, '0');
+            var m   = String(now.getMinutes()).padStart(2, '0');
+
             var bubble = document.createElement('div');
-            bubble.className = 'clc-message clc-message--welcome';
-            bubble.textContent = 'سلام ' + name + ' عزیز، خوش آمدی!';
+            bubble.className = 'clc-message';
+
+            var text = document.createElement('span');
+            text.className   = 'clc-message__text';
+            text.textContent = 'سلام ' + name + ' عزیز، خوش آمدی!';
+
+            var meta = document.createElement('span');
+            meta.className   = 'clc-message__meta';
+            meta.textContent = h + ':' + m;
+
+            bubble.appendChild(text);
+            bubble.appendChild(meta);
             list.appendChild(bubble);
 
             CarnoLC.Chat.scrollToBottom();

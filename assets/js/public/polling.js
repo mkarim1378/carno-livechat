@@ -5,11 +5,13 @@
 
     CarnoLC.Polling = {
 
-        _lastId:   0,
-        _timer:    null,
-        _fetching: false,
+        _lastId:       0,
+        _timer:        null,
+        _fetching:     false,
+        _onFirstFetch: null,
 
-        start: function () {
+        start: function (onFirstFetch) {
+            this._onFirstFetch = onFirstFetch || null;
             this._fetch();
 
             var self     = this;
@@ -51,6 +53,12 @@
                             CarnoLC.Chat.removeDeleted(res.data.deleted_ids);
                         }
                     }
+
+                    if (self._onFirstFetch) {
+                        self._onFirstFetch();
+                        self._onFirstFetch = null;
+                    }
+
                     self._fetching = false;
                 },
                 function () {

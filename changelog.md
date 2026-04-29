@@ -7,10 +7,10 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ## [2.3.0] - 2026-04-29
 
-- Added `CarnoLC.Chat.renderWelcome(name)` in `chat.js` — renders a one-time local welcome bubble ("سلام {name} عزیز، خوش آمدی!") for new users only; removes the empty-state element if present and scrolls to bottom
-- Updated `startChat()` in `main.js` — accepts optional third argument `showWelcome`; calls `renderWelcome` before polling starts so the message appears before history loads
-- Welcome message shown on every page load (new and returning visitors alike) — no database needed; name is always available from localStorage
-- Added `.clc-message--welcome` style in `public.css` — centered pill-shaped bubble with brand color
+- Added `CarnoLC.Chat.renderWelcome(name)` in `chat.js` — renders a welcome bubble identical in structure and style to broadcast messages (`.clc-message` with text + HH:MM meta); appended after existing messages so broadcast history always comes first
+- Added `_onFirstFetch` callback support to `Polling.start(onFirstFetch)` in `polling.js` — fires once after the first AJAX response completes then nulls itself; used to defer the welcome message until history is loaded
+- Updated `startChat()` in `main.js` — passes `renderWelcome` as `onFirstFetch` callback so welcome always appears after any pre-existing broadcast messages; shown on every page load for both new and returning users
+- Removed `.clc-message--welcome` custom style from `public.css` — welcome bubble now inherits standard `.clc-message` styling
 
 ---
 

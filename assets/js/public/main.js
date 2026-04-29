@@ -5,8 +5,9 @@
         var chat = document.getElementById('clc-chat');
         if (chat) chat.classList.add('clc-chat--visible');
         CarnoLC.Heartbeat.start(sessionId);
-        CarnoLC.Chat.renderWelcome(name);
-        CarnoLC.Polling.start();
+        CarnoLC.Polling.start(function () {
+            CarnoLC.Chat.renderWelcome(name);
+        });
     }
 
     document.addEventListener('DOMContentLoaded', function () {
