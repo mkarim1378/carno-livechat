@@ -162,6 +162,11 @@
     display: block;
 }
 
+.clc-message__text a {
+    color: #2c2d74;
+    word-break: break-all;
+}
+
 .clc-message__meta {
     display: block;
     font-size: 11px;

@@ -5,6 +5,14 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [2.4.0] - 2026-04-29
+
+- Fixed broadcast messages containing URLs — `chat.js` now uses `_renderText()` helper that detects `http(s)://` URLs via regex and creates `<a target="_blank" rel="noopener noreferrer">` elements programmatically (XSS-safe; no innerHTML); plain text segments become `TextNode`s
+- Added `.clc-message__text a` style in `public.css` — brand color link with `word-break: break-all` for long URLs
+- Bumped plugin version to 2.4.0
+
+---
+
 ## [2.3.0] - 2026-04-29
 
 - Added `CarnoLC.Chat.renderWelcome(name)` in `chat.js` — renders a welcome bubble identical in structure and style to broadcast messages (`.clc-message` with text + HH:MM meta); appended after existing messages so broadcast history always comes first

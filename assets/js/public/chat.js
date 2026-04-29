@@ -18,8 +18,8 @@
                 bubble.dataset.id   = msg.id;
 
                 var text = document.createElement('span');
-                text.className   = 'clc-message__text';
-                text.textContent = msg.message;
+                text.className = 'clc-message__text';
+                CarnoLC.Chat._renderText(text, msg.message);
 
                 var meta = document.createElement('span');
                 meta.className   = 'clc-message__meta';
@@ -84,6 +84,29 @@
         scrollToBottom: function () {
             var list = document.getElementById('clc-messages');
             if (list) list.scrollTop = list.scrollHeight;
+        },
+
+        _renderText: function (el, text) {
+            var urlPattern = /https?:\/\/[^\s]+/g;
+            var last = 0;
+            var match;
+
+            while ((match = urlPattern.exec(text)) !== null) {
+                if (match.index > last) {
+                    el.appendChild(document.createTextNode(text.slice(last, match.index)));
+                }
+                var a = document.createElement('a');
+                a.href             = match[0];
+                a.textContent      = match[0];
+                a.target           = '_blank';
+                a.rel              = 'noopener noreferrer';
+                el.appendChild(a);
+                last = match.index + match[0].length;
+            }
+
+            if (last < text.length) {
+                el.appendChild(document.createTextNode(text.slice(last)));
+            }
         },
 
         _formatTime: function (datetime) {
