@@ -47,8 +47,10 @@
     }
 
     // -------------------------------------------------------------------------
-    // User list
+    // User list + pagination
     // -------------------------------------------------------------------------
+
+    var _usersPage = 1;
 
     function renderUserList(users) {
         var tbody = document.getElementById('clc-user-list');
@@ -75,8 +77,8 @@
 
             var tdStatus = document.createElement('td');
             var badge = document.createElement('span');
-            badge.textContent  = user.is_online === '1' ? 'Online' : 'Offline';
-            badge.className    = user.is_online === '1' ? 'clc-admin__badge clc-admin__badge--online' : 'clc-admin__badge clc-admin__badge--offline';
+            badge.textContent = user.is_online === '1' ? 'Online' : 'Offline';
+            badge.className   = user.is_online === '1' ? 'clc-admin__badge clc-admin__badge--online' : 'clc-admin__badge clc-admin__badge--offline';
             tdStatus.appendChild(badge);
 
             tr.appendChild(tdName);
@@ -87,11 +89,48 @@
         });
     }
 
-    function fetchUsers() {
+    function renderUserPagination(page, totalPages) {
+        var container = document.getElementById('clc-user-pagination');
+        if (!container) return;
+
+        container.innerHTML = '';
+
+        if (totalPages <= 1) return;
+
+        var prev = document.createElement('button');
+        prev.className   = 'button clc-admin__page-btn';
+        prev.textContent = '←';
+        prev.disabled    = page <= 1;
+        prev.addEventListener('click', function () {
+            if (_usersPage > 1) fetchUsers(_usersPage - 1);
+        });
+
+        var info = document.createElement('span');
+        info.className   = 'clc-admin__page-info';
+        info.textContent = page + ' / ' + totalPages;
+
+        var next = document.createElement('button');
+        next.className   = 'button clc-admin__page-btn';
+        next.textContent = '→';
+        next.disabled    = page >= totalPages;
+        next.addEventListener('click', function () {
+            if (_usersPage < totalPages) fetchUsers(_usersPage + 1);
+        });
+
+        container.appendChild(prev);
+        container.appendChild(info);
+        container.appendChild(next);
+    }
+
+    function fetchUsers(page) {
+        _usersPage = page || 1;
         post(
-            { action: 'livechat_get_users', nonce: CarnoLivechatAdmin.nonce },
+            { action: 'livechat_get_users', nonce: CarnoLivechatAdmin.nonce, page: _usersPage },
             function (res) {
-                if (res.success) renderUserList(res.data.users);
+                if (res.success) {
+                    renderUserList(res.data.users);
+                    renderUserPagination(res.data.page, res.data.total_pages);
+                }
             }
         );
     }

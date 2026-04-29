@@ -132,7 +132,12 @@ class Carno_Livechat_Database {
         );
     }
 
-    public static function get_all_users( $limit = 100 ) {
+    public static function count_all_users() {
+        global $wpdb;
+        return (int) $wpdb->get_var( 'SELECT COUNT(*) FROM ' . self::users_table() );
+    }
+
+    public static function get_all_users( $limit = 30, $offset = 0 ) {
         global $wpdb;
 
         return $wpdb->get_results(
@@ -140,8 +145,9 @@ class Carno_Livechat_Database {
                 'SELECT id, name, created_at, last_seen,
                     CASE WHEN last_seen >= DATE_SUB(NOW(), INTERVAL 60 SECOND) THEN 1 ELSE 0 END AS is_online
                  FROM ' . self::users_table() .
-                ' ORDER BY last_seen DESC LIMIT %d',
-                absint( $limit )
+                ' ORDER BY last_seen DESC LIMIT %d OFFSET %d',
+                absint( $limit ),
+                absint( $offset )
             )
         );
     }

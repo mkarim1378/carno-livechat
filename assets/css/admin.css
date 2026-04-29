@@ -245,6 +245,26 @@
     border: 1px solid #e0e0e0;
 }
 
+.clc-admin__pagination {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+    justify-content: center;
+}
+
+.clc-admin__page-btn {
+    min-width: 34px;
+    padding: 2px 10px !important;
+}
+
+.clc-admin__page-info {
+    font-size: 13px;
+    color: #555;
+    min-width: 60px;
+    text-align: center;
+}
+
 .clc-admin__list-empty {
     color: #aaa;
     font-size: 13px;

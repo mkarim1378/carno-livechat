@@ -77,9 +77,19 @@ class Carno_Livechat_Admin_Ajax {
             wp_send_json_error( [ 'message' => 'Unauthorized.' ], 403 );
         }
 
-        $users = Carno_Livechat_Database::get_all_users( 100 );
+        $per_page    = 30;
+        $page        = isset( $_POST['page'] ) ? max( 1, absint( $_POST['page'] ) ) : 1;
+        $offset      = ( $page - 1 ) * $per_page;
+        $total       = Carno_Livechat_Database::count_all_users();
+        $total_pages = (int) ceil( $total / $per_page );
+        $users       = Carno_Livechat_Database::get_all_users( $per_page, $offset );
 
-        wp_send_json_success( [ 'users' => $users ] );
+        wp_send_json_success( [
+            'users'       => $users,
+            'total'       => $total,
+            'page'        => $page,
+            'total_pages' => $total_pages,
+        ] );
     }
 
     public function delete_all_messages() {

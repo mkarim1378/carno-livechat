@@ -5,6 +5,19 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [2.5.0] - 2026-04-29
+
+- Added `Database::count_all_users()` — returns total user count for pagination math
+- Updated `Database::get_all_users()` — added `$offset` parameter; default limit changed from 100 to 30
+- Updated `Admin_Ajax::get_users()` — accepts `page` POST param; returns 30 users per page with `total`, `page`, `total_pages` in response
+- Added AJAX pagination to Registered Users table in `admin.js` — `fetchUsers(page)` tracks `_usersPage`; `renderUserPagination()` renders prev/next buttons and page indicator; pagination hidden when total pages ≤ 1
+- Added `#clc-user-pagination` container to `broadcast-panel.php`
+- Moved Sent Messages box above Registered Users box in `broadcast-panel.php`
+- Added `.clc-admin__pagination`, `.clc-admin__page-btn`, `.clc-admin__page-info` styles in `admin.css`
+- Bumped plugin version to 2.5.0
+
+---
+
 ## [2.4.0] - 2026-04-29
 
 - Fixed broadcast messages containing URLs — `chat.js` now uses `_renderText()` helper that detects `http(s)://` URLs via regex and creates `<a target="_blank" rel="noopener noreferrer">` elements programmatically (XSS-safe; no innerHTML); plain text segments become `TextNode`s
