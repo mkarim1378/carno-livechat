@@ -5,6 +5,12 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [2.5.1] - 2026-04-29
+
+- Fixed newlines in broadcast messages being collapsed to a single line — added `white-space: pre-wrap` to `.clc-message__text` in `public.css` and `.clc-admin__message-text` in `admin.css`
+
+---
+
 ## [2.5.0] - 2026-04-29
 
 - Added `Database::count_all_users()` — returns total user count for pagination math
