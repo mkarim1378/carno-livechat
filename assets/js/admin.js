@@ -269,6 +269,27 @@
             refreshUsersBtn.addEventListener('click', fetchUsers);
         }
 
+        var toggleChatBtn = document.getElementById('clc-toggle-chat');
+        if (toggleChatBtn) {
+            toggleChatBtn.addEventListener('click', function () {
+                toggleChatBtn.disabled = true;
+                post(
+                    { action: 'livechat_toggle_chat', nonce: CarnoLivechatAdmin.nonce },
+                    function (res) {
+                        if (res.success) {
+                            var enabled = res.data.chat_enabled;
+                            toggleChatBtn.textContent = enabled ? 'Enabled' : 'Disabled';
+                            toggleChatBtn.classList.toggle('clc-admin__toggle-btn--on', enabled);
+                        }
+                        toggleChatBtn.disabled = false;
+                    },
+                    function () {
+                        toggleChatBtn.disabled = false;
+                    }
+                );
+            });
+        }
+
         fetchOnlineCount();
         setInterval(fetchOnlineCount, 10000);
         fetchUsers();

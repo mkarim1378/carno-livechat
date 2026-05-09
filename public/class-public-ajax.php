@@ -44,8 +44,9 @@ class Carno_Livechat_Public_Ajax {
         $deleted_ids = Carno_Livechat_Database::get_deleted_ids();
 
         wp_send_json_success( [
-            'messages'    => $messages,
-            'deleted_ids' => $deleted_ids,
+            'messages'     => $messages,
+            'deleted_ids'  => $deleted_ids,
+            'chat_enabled' => (bool) get_option( 'carno_livechat_chat_enabled', 0 ),
         ] );
     }
 

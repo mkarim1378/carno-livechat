@@ -52,6 +52,22 @@
             }
         },
 
+        setChatState: function (enabled) {
+            var input = document.getElementById('clc-chat-input');
+            var btn   = document.getElementById('clc-send-btn');
+            if (!input) return;
+
+            if (enabled) {
+                input.disabled     = false;
+                input.placeholder  = input.dataset.activePlaceholder || '';
+                if (btn) btn.style.display = '';
+            } else {
+                input.disabled     = true;
+                input.placeholder  = input.dataset.disabledPlaceholder || '';
+                if (btn) btn.style.display = 'none';
+            }
+        },
+
         renderWelcome: function (name) {
             var list = document.getElementById('clc-messages');
             if (!list) return;

@@ -57,8 +57,9 @@ class Carno_Livechat_Admin {
             $this->plugin_name . '-admin',
             'CarnoLivechatAdmin',
             [
-                'ajax_url' => admin_url( 'admin-ajax.php' ),
-                'nonce'    => wp_create_nonce( 'carno_livechat_admin_nonce' ),
+                'ajax_url'     => admin_url( 'admin-ajax.php' ),
+                'nonce'        => wp_create_nonce( 'carno_livechat_admin_nonce' ),
+                'chat_enabled' => (bool) get_option( 'carno_livechat_chat_enabled', 0 ),
             ]
         );
     }

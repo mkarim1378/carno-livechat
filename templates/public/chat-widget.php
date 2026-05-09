@@ -37,10 +37,17 @@ $placeholder = isset( $placeholder ) ? $placeholder : __( 'نام شما', 'carn
         <div class="clc-chat__footer">
             <input
                 type="text"
+                id="clc-chat-input"
                 class="clc-chat__input"
                 disabled
                 placeholder="<?php esc_attr_e( 'گفتگو غیرفعال شده است', 'carno-livechat' ); ?>"
+                data-disabled-placeholder="<?php esc_attr_e( 'گفتگو غیرفعال شده است', 'carno-livechat' ); ?>"
+                data-active-placeholder="<?php esc_attr_e( 'پیام خود را بنویسید...', 'carno-livechat' ); ?>"
+                autocomplete="off"
             />
+            <button id="clc-send-btn" class="clc-chat__send" type="button" style="display:none">
+                <?php esc_html_e( 'ارسال', 'carno-livechat' ); ?>
+            </button>
         </div>
     </div>
 

@@ -5,6 +5,25 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [2.6.0] - 2026-05-09
+
+- Added `carno_livechat_chat_enabled` option in `wp_options` to store chat enabled/disabled state
+- Added `Admin_Ajax::toggle_chat()` — cap + nonce validated; flips option and returns new state; wired as `wp_ajax_livechat_toggle_chat`
+- Updated `Public_Ajax::get_messages()` — now includes `chat_enabled` bool in every polling response so frontend reflects toggle within one poll cycle (~5s)
+- Added `chat_enabled` to `CarnoLivechat` localized JS object (public) and `CarnoLivechatAdmin` (admin) for zero-flash initial state
+- Updated `broadcast-panel.php` — stats bar replaced by `.clc-admin__topbar` containing online counter and new User Chat toggle button; button shows Enabled/Disabled state with green/grey styling
+- Updated `admin.js` — toggle button click → AJAX → updates button text and class instantly; button disabled during request to prevent double-clicks
+- Updated `chat-widget.php` — added `id="clc-chat-input"`, `data-disabled-placeholder`, `data-active-placeholder` attributes; added hidden `#clc-send-btn` button in footer
+- Added `Chat.setChatState(enabled)` in `chat.js` — enables/disables input, swaps placeholder, shows/hides send button
+- Updated `main.js` — calls `setChatState()` from localized `chat_enabled` on startup (no flash before first poll)
+- Updated `polling.js` — calls `setChatState()` after each successful fetch (toggle reflected within 5s)
+- Updated `public.css` — footer is now flex; active input styles; send button styles
+- Updated `admin.css` — topbar layout; toggle button on/off styles
+- Added `.gitignore` — excludes `user-chat-plan.md`
+- Bumped plugin version to 2.6.0
+
+---
+
 ## [2.5.1] - 2026-04-29
 
 - Fixed newlines in broadcast messages being collapsed to a single line — added `white-space: pre-wrap` to `.clc-message__text` in `public.css` and `.clc-admin__message-text` in `admin.css`

@@ -11,9 +11,17 @@ if ( ! current_user_can( 'manage_options' ) ) {
 
     <h1><?php esc_html_e( 'Carno LiveChat — Broadcast Panel', 'carno-livechat' ); ?></h1>
 
-    <div class="clc-admin__stats">
-        <span class="clc-admin__stat-label"><?php esc_html_e( 'Online Users:', 'carno-livechat' ); ?></span>
-        <strong id="clc-online-count">—</strong>
+    <div class="clc-admin__topbar">
+        <div class="clc-admin__stats">
+            <span class="clc-admin__stat-label"><?php esc_html_e( 'Online Users:', 'carno-livechat' ); ?></span>
+            <strong id="clc-online-count">—</strong>
+        </div>
+        <div class="clc-admin__chat-toggle">
+            <span class="clc-admin__stat-label"><?php esc_html_e( 'User Chat:', 'carno-livechat' ); ?></span>
+            <button id="clc-toggle-chat" class="button clc-admin__toggle-btn<?php echo get_option( 'carno_livechat_chat_enabled' ) ? ' clc-admin__toggle-btn--on' : ''; ?>">
+                <?php echo get_option( 'carno_livechat_chat_enabled' ) ? esc_html__( 'Enabled', 'carno-livechat' ) : esc_html__( 'Disabled', 'carno-livechat' ); ?>
+            </button>
+        </div>
     </div>
 
     <div class="clc-admin__shortcode-info">

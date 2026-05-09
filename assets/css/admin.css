@@ -14,6 +14,43 @@
    Stats bar
    -------------------------------------------------------------------------- */
 
+.clc-admin__topbar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+}
+
+.clc-admin__topbar .clc-admin__stats {
+    margin-bottom: 0;
+}
+
+.clc-admin__chat-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 14px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.clc-admin__toggle-btn {
+    min-width: 80px;
+    font-weight: 600 !important;
+    color: #999 !important;
+    border-color: #ccc !important;
+}
+
+.clc-admin__toggle-btn--on {
+    color: #46b450 !important;
+    border-color: #46b450 !important;
+    background: #eafbea !important;
+}
+
 .clc-admin__stats {
     display: inline-flex;
     align-items: center;

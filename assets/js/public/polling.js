@@ -52,6 +52,8 @@
                         if (res.data.deleted_ids && res.data.deleted_ids.length) {
                             CarnoLC.Chat.removeDeleted(res.data.deleted_ids);
                         }
+
+                        CarnoLC.Chat.setChatState(!!res.data.chat_enabled);
                     }
 
                     if (self._onFirstFetch) {
