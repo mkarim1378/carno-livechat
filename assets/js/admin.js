@@ -59,12 +59,13 @@
         tbody.innerHTML = '';
 
         if (!users || !users.length) {
-            tbody.innerHTML = '<tr><td colspan="4" class="clc-admin__list-empty">No users yet.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5" class="clc-admin__list-empty">No users yet.</td></tr>';
             return;
         }
 
         users.forEach(function (user) {
             var tr = document.createElement('tr');
+            var isBanned = user.is_banned === '1' || user.is_banned === 1;
 
             var tdName = document.createElement('td');
             tdName.textContent = user.name;
@@ -77,16 +78,106 @@
 
             var tdStatus = document.createElement('td');
             var badge = document.createElement('span');
-            badge.textContent = user.is_online === '1' ? 'Online' : 'Offline';
-            badge.className   = user.is_online === '1' ? 'clc-admin__badge clc-admin__badge--online' : 'clc-admin__badge clc-admin__badge--offline';
+            if (isBanned) {
+                badge.textContent = 'Banned';
+                badge.className   = 'clc-admin__badge clc-admin__badge--banned';
+            } else if (user.is_online === '1') {
+                badge.textContent = 'Online';
+                badge.className   = 'clc-admin__badge clc-admin__badge--online';
+            } else {
+                badge.textContent = 'Offline';
+                badge.className   = 'clc-admin__badge clc-admin__badge--offline';
+            }
             tdStatus.appendChild(badge);
+
+            var tdActions = document.createElement('td');
+
+            var delMsgsBtn = document.createElement('button');
+            delMsgsBtn.className   = 'button clc-admin__btn-danger clc-admin__btn-sm';
+            delMsgsBtn.textContent = 'حذف پیام‌ها';
+            delMsgsBtn.addEventListener('click', function () {
+                deleteUserMessages(user.session_id);
+            });
+            tdActions.appendChild(delMsgsBtn);
+
+            var banBtn = document.createElement('button');
+            if (isBanned) {
+                banBtn.className   = 'button clc-admin__btn-sm';
+                banBtn.textContent = 'آزاد کردن';
+                banBtn.addEventListener('click', function () {
+                    unbanUser(user.session_id, tr, badge, banBtn);
+                });
+            } else {
+                banBtn.className   = 'button clc-admin__btn-danger clc-admin__btn-sm';
+                banBtn.textContent = 'بن کردن';
+                banBtn.addEventListener('click', function () {
+                    banUser(user.session_id, tr, badge, banBtn);
+                });
+            }
+            tdActions.appendChild(banBtn);
 
             tr.appendChild(tdName);
             tr.appendChild(tdFirst);
             tr.appendChild(tdLast);
             tr.appendChild(tdStatus);
+            tr.appendChild(tdActions);
             tbody.appendChild(tr);
         });
+    }
+
+    function banUser(sessionId, tr, badge, btn) {
+        btn.disabled = true;
+        post(
+            { action: 'livechat_ban_user', nonce: CarnoLivechatAdmin.nonce, session_id: sessionId },
+            function (res) {
+                if (res.success) {
+                    badge.textContent = 'Banned';
+                    badge.className   = 'clc-admin__badge clc-admin__badge--banned';
+                    btn.textContent   = 'آزاد کردن';
+                    btn.className     = 'button clc-admin__btn-sm';
+                    btn.disabled      = false;
+                    btn.onclick = null;
+                    btn.addEventListener('click', function () {
+                        unbanUser(sessionId, tr, badge, btn);
+                    });
+                } else {
+                    btn.disabled = false;
+                }
+            },
+            function () { btn.disabled = false; }
+        );
+    }
+
+    function unbanUser(sessionId, tr, badge, btn) {
+        btn.disabled = true;
+        post(
+            { action: 'livechat_unban_user', nonce: CarnoLivechatAdmin.nonce, session_id: sessionId },
+            function (res) {
+                if (res.success) {
+                    badge.textContent = 'Offline';
+                    badge.className   = 'clc-admin__badge clc-admin__badge--offline';
+                    btn.textContent   = 'بن کردن';
+                    btn.className     = 'button clc-admin__btn-danger clc-admin__btn-sm';
+                    btn.disabled      = false;
+                    btn.onclick = null;
+                    btn.addEventListener('click', function () {
+                        banUser(sessionId, tr, badge, btn);
+                    });
+                } else {
+                    btn.disabled = false;
+                }
+            },
+            function () { btn.disabled = false; }
+        );
+    }
+
+    function deleteUserMessages(sessionId) {
+        post(
+            { action: 'livechat_delete_user_messages', nonce: CarnoLivechatAdmin.nonce, session_id: sessionId },
+            function (res) {
+                if (res.success) fetchMessages();
+            }
+        );
     }
 
     function renderUserPagination(page, totalPages) {
@@ -157,30 +248,49 @@
         }
 
         messages.forEach(function (msg) {
+            var isUserMsg = msg.session_id && msg.session_id !== '';
+
             var row = document.createElement('div');
-            row.className = 'clc-admin__message-row';
+            row.className  = 'clc-admin__message-row' + (isUserMsg ? ' clc-admin__message-row--user' : '');
             row.dataset.id = msg.id;
 
+            if (isUserMsg) {
+                var senderBadge = document.createElement('span');
+                senderBadge.className   = 'clc-admin__user-badge';
+                senderBadge.textContent = msg.sent_by;
+                row.appendChild(senderBadge);
+            }
+
             var text = document.createElement('span');
-            text.className = 'clc-admin__message-text';
+            text.className   = 'clc-admin__message-text';
             text.textContent = msg.message;
 
             var meta = document.createElement('span');
-            meta.className = 'clc-admin__message-meta';
+            meta.className   = 'clc-admin__message-meta';
             meta.textContent = formatTime(msg.created_at);
 
-            var btn = document.createElement('button');
-            btn.className = 'button clc-admin__btn-danger clc-admin__btn-delete';
-            btn.textContent = 'حذف';
-            btn.dataset.id = msg.id;
-
-            btn.addEventListener('click', function () {
-                deleteMessage(parseInt(btn.dataset.id, 10), row);
+            var delBtn = document.createElement('button');
+            delBtn.className   = 'button clc-admin__btn-danger clc-admin__btn-delete';
+            delBtn.textContent = 'حذف';
+            delBtn.dataset.id  = msg.id;
+            delBtn.addEventListener('click', function () {
+                deleteMessage(parseInt(delBtn.dataset.id, 10), row);
             });
 
             row.appendChild(text);
             row.appendChild(meta);
-            row.appendChild(btn);
+
+            if (isUserMsg) {
+                var delAllBtn = document.createElement('button');
+                delAllBtn.className   = 'button clc-admin__btn-sm';
+                delAllBtn.textContent = 'حذف همه پیام‌های این کاربر';
+                delAllBtn.addEventListener('click', function () {
+                    deleteUserMessages(msg.session_id);
+                });
+                row.appendChild(delAllBtn);
+            }
+
+            row.appendChild(delBtn);
             list.appendChild(row);
         });
     }

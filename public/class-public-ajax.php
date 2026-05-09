@@ -38,15 +38,21 @@ class Carno_Livechat_Public_Ajax {
     public function get_messages() {
         check_ajax_referer( 'carno_livechat_nonce', 'nonce' );
 
-        $last_id = isset( $_POST['last_id'] ) ? absint( $_POST['last_id'] ) : 0;
+        $last_id    = isset( $_POST['last_id'] )    ? absint( $_POST['last_id'] )                                        : 0;
+        $session_id = isset( $_POST['session_id'] ) ? sanitize_text_field( wp_unslash( $_POST['session_id'] ) ) : '';
 
         $messages    = Carno_Livechat_Database::get_messages_since( $last_id );
         $deleted_ids = Carno_Livechat_Database::get_deleted_ids();
+
+        $is_banned = $session_id && $this->is_valid_uuid( $session_id )
+            ? Carno_Livechat_Database::is_user_banned( $session_id )
+            : false;
 
         wp_send_json_success( [
             'messages'     => $messages,
             'deleted_ids'  => $deleted_ids,
             'chat_enabled' => (bool) get_option( 'carno_livechat_chat_enabled', 0 ),
+            'is_banned'    => $is_banned,
         ] );
     }
 

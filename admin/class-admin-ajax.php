@@ -92,6 +92,45 @@ class Carno_Livechat_Admin_Ajax {
         ] );
     }
 
+    public function ban_user() {
+        check_ajax_referer( 'carno_livechat_admin_nonce', 'nonce' );
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( [ 'message' => 'Unauthorized.' ], 403 );
+        }
+        $session_id = isset( $_POST['session_id'] ) ? sanitize_text_field( wp_unslash( $_POST['session_id'] ) ) : '';
+        if ( empty( $session_id ) ) {
+            wp_send_json_error( [ 'message' => 'Invalid session.' ], 400 );
+        }
+        Carno_Livechat_Database::ban_user( $session_id );
+        wp_send_json_success();
+    }
+
+    public function unban_user() {
+        check_ajax_referer( 'carno_livechat_admin_nonce', 'nonce' );
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( [ 'message' => 'Unauthorized.' ], 403 );
+        }
+        $session_id = isset( $_POST['session_id'] ) ? sanitize_text_field( wp_unslash( $_POST['session_id'] ) ) : '';
+        if ( empty( $session_id ) ) {
+            wp_send_json_error( [ 'message' => 'Invalid session.' ], 400 );
+        }
+        Carno_Livechat_Database::unban_user( $session_id );
+        wp_send_json_success();
+    }
+
+    public function delete_user_messages() {
+        check_ajax_referer( 'carno_livechat_admin_nonce', 'nonce' );
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( [ 'message' => 'Unauthorized.' ], 403 );
+        }
+        $session_id = isset( $_POST['session_id'] ) ? sanitize_text_field( wp_unslash( $_POST['session_id'] ) ) : '';
+        if ( empty( $session_id ) ) {
+            wp_send_json_error( [ 'message' => 'Invalid session.' ], 400 );
+        }
+        Carno_Livechat_Database::delete_user_messages( $session_id );
+        wp_send_json_success();
+    }
+
     public function toggle_chat() {
         check_ajax_referer( 'carno_livechat_admin_nonce', 'nonce' );
 

@@ -166,13 +166,53 @@ class Carno_Livechat_Database {
 
         return $wpdb->get_results(
             $wpdb->prepare(
-                'SELECT id, name, created_at, last_seen,
+                'SELECT id, name, session_id, is_banned, created_at, last_seen,
                     CASE WHEN last_seen >= DATE_SUB(NOW(), INTERVAL 60 SECOND) THEN 1 ELSE 0 END AS is_online
                  FROM ' . self::users_table() .
                 ' ORDER BY last_seen DESC LIMIT %d OFFSET %d',
                 absint( $limit ),
                 absint( $offset )
             )
+        );
+    }
+
+    public static function ban_user( $session_id ) {
+        global $wpdb;
+        $wpdb->update(
+            self::users_table(),
+            [ 'is_banned'  => 1 ],
+            [ 'session_id' => sanitize_text_field( $session_id ) ],
+            [ '%d' ], [ '%s' ]
+        );
+    }
+
+    public static function unban_user( $session_id ) {
+        global $wpdb;
+        $wpdb->update(
+            self::users_table(),
+            [ 'is_banned'  => 0 ],
+            [ 'session_id' => sanitize_text_field( $session_id ) ],
+            [ '%d' ], [ '%s' ]
+        );
+    }
+
+    public static function is_user_banned( $session_id ) {
+        global $wpdb;
+        return (bool) $wpdb->get_var(
+            $wpdb->prepare(
+                'SELECT is_banned FROM ' . self::users_table() . ' WHERE session_id = %s LIMIT 1',
+                sanitize_text_field( $session_id )
+            )
+        );
+    }
+
+    public static function delete_user_messages( $session_id ) {
+        global $wpdb;
+        $wpdb->update(
+            self::messages_table(),
+            [ 'is_deleted' => 1 ],
+            [ 'session_id' => sanitize_text_field( $session_id ) ],
+            [ '%d' ], [ '%s' ]
         );
     }
 
@@ -276,7 +316,7 @@ class Carno_Livechat_Database {
 
         return $wpdb->get_results(
             $wpdb->prepare(
-                'SELECT id, message, sent_by, created_at FROM ' . self::messages_table() .
+                'SELECT id, message, sent_by, session_id, created_at FROM ' . self::messages_table() .
                 ' WHERE is_deleted = 0 ORDER BY id DESC LIMIT %d',
                 absint( $limit )
             )

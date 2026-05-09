@@ -74,6 +74,7 @@ if ( ! current_user_can( 'manage_options' ) ) {
                     <th><?php esc_html_e( 'First Visit', 'carno-livechat' ); ?></th>
                     <th><?php esc_html_e( 'Last Visit', 'carno-livechat' ); ?></th>
                     <th><?php esc_html_e( 'Status', 'carno-livechat' ); ?></th>
+                    <th><?php esc_html_e( 'Actions', 'carno-livechat' ); ?></th>
                 </tr>
             </thead>
             <tbody id="clc-user-list">

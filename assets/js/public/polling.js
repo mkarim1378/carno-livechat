@@ -35,12 +35,16 @@
             this._fetching = true;
             var self = this;
 
+            var session    = CarnoLC.Session ? CarnoLC.Session.get() : null;
+            var sessionId  = session ? (session.session_id || '') : '';
+
             CarnoLC._post(
                 CarnoLivechat.ajax_url,
                 {
-                    action:  'livechat_get_messages',
-                    nonce:   CarnoLivechat.nonce,
-                    last_id: self._lastId
+                    action:     'livechat_get_messages',
+                    nonce:      CarnoLivechat.nonce,
+                    last_id:    self._lastId,
+                    session_id: sessionId
                 },
                 function (res) {
                     if (res.success) {
@@ -53,7 +57,11 @@
                             CarnoLC.Chat.removeDeleted(res.data.deleted_ids);
                         }
 
-                        CarnoLC.Chat.setChatState(!!res.data.chat_enabled);
+                        if (res.data.is_banned) {
+                            CarnoLC.Chat.setBanned();
+                        } else {
+                            CarnoLC.Chat.setChatState(!!res.data.chat_enabled);
+                        }
                     }
 
                     if (self._onFirstFetch) {

@@ -5,6 +5,22 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [2.10.0] - 2026-05-09
+
+- Added `Database::ban_user()`, `unban_user()`, `is_user_banned()` — set/clear/read `is_banned` flag on users table
+- Added `Database::delete_user_messages($session_id)` — soft-deletes all messages by a given session
+- Updated `Database::get_all_users()` — now returns `session_id` and `is_banned` columns
+- Updated `Database::get_all_messages()` — now returns `session_id` to distinguish admin vs user messages
+- Added `Admin_Ajax::ban_user()`, `unban_user()`, `delete_user_messages()` — nonce + cap validated; wired as `livechat_ban_user`, `livechat_unban_user`, `livechat_delete_user_messages`
+- Updated `Public_Ajax::get_messages()` — accepts optional `session_id` POST param; returns `is_banned` bool so polling can react instantly when user is banned mid-session
+- Updated `polling.js` — sends `session_id` with every request; if `is_banned` is true calls `Chat.setBanned()`, otherwise calls `setChatState()`
+- Updated `admin.js` — `renderUserList()` shows Banned badge and inline ban/unban buttons that toggle state without page reload; "حذف پیام‌ها" button per user row; `renderMessageList()` shows sender badge and "حذف همه پیام‌های این کاربر" button for user messages; added `banUser()`, `unbanUser()`, `deleteUserMessages()` helpers
+- Updated `broadcast-panel.php` — added Actions column header to users table
+- Added `.clc-admin__badge--banned`, `.clc-admin__btn-sm`, `.clc-admin__user-badge`, `.clc-admin__message-row--user` styles in `admin.css`
+- Bumped plugin version to 2.10.0
+
+---
+
 ## [2.9.0] - 2026-05-09
 
 - Created `assets/js/public/input.js` — `CarnoLC.Input.init(sessionId)` wires send button click; `send()` POSTs to `livechat_send_message`, clears input, immediately renders own message via `Chat.render()`, advances `Polling._lastId` to prevent duplicate render on next poll; handles `banned` (calls `Chat.setBanned()`) and `rate_limit` (2s button flash) error codes; button disabled during request
