@@ -63,7 +63,8 @@ class Carno_Livechat_Public {
     }
 
     public function register_shortcode() {
-        add_shortcode( 'livechat', [ $this, 'render_shortcode' ] );
+        add_shortcode( 'livechat',         [ $this, 'render_shortcode' ] );
+        add_shortcode( 'livechat_viewers', [ $this, 'render_viewer_shortcode' ] );
     }
 
     public function render_shortcode( $atts ) {
@@ -82,6 +83,14 @@ class Carno_Livechat_Public {
         ob_start();
         include CARNO_LIVECHAT_PATH . 'templates/public/chat-widget.php';
         return ob_get_clean();
+    }
+
+    public function render_viewer_shortcode() {
+        $real  = Carno_Livechat_Database::count_online_users();
+        $count = get_option( 'carno_livechat_live_mode', 0 )
+            ? $real * 2 + 12
+            : $real;
+        return '<span>' . esc_html( $count ) . '</span>';
     }
 
     private function is_livechat_page() {

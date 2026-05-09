@@ -49,7 +49,8 @@ class Carno_Livechat {
         $this->loader->add_action( 'wp_ajax_livechat_delete_message',     $admin_ajax, 'delete_message' );
         $this->loader->add_action( 'wp_ajax_livechat_delete_all_messages',$admin_ajax, 'delete_all_messages' );
         $this->loader->add_action( 'wp_ajax_livechat_get_users',          $admin_ajax, 'get_users' );
-        $this->loader->add_action( 'wp_ajax_livechat_toggle_chat',          $admin_ajax, 'toggle_chat' );
+        $this->loader->add_action( 'wp_ajax_livechat_toggle_chat',           $admin_ajax, 'toggle_chat' );
+        $this->loader->add_action( 'wp_ajax_livechat_toggle_live_mode',    $admin_ajax, 'toggle_live_mode' );
         $this->loader->add_action( 'wp_ajax_livechat_set_chat_mode',       $admin_ajax, 'set_chat_mode' );
         $this->loader->add_action( 'wp_ajax_livechat_ban_user',            $admin_ajax, 'ban_user' );
         $this->loader->add_action( 'wp_ajax_livechat_unban_user',          $admin_ajax, 'unban_user' );

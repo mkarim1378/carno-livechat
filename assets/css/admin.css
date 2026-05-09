@@ -96,9 +96,9 @@
 }
 
 .clc-admin__stats strong {
-    font-size: 22px;
+    font-size: 14px;
     color: #2c2d74;
-    min-width: 28px;
+    min-width: 20px;
     text-align: center;
 }
 
