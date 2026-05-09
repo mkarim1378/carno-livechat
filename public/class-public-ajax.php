@@ -50,6 +50,53 @@ class Carno_Livechat_Public_Ajax {
         ] );
     }
 
+    public function send_user_message() {
+        check_ajax_referer( 'carno_livechat_nonce', 'nonce' );
+
+        if ( ! get_option( 'carno_livechat_chat_enabled', 0 ) ) {
+            wp_send_json_error( [ 'message' => 'Chat is disabled.' ], 403 );
+        }
+
+        $session_id = isset( $_POST['session_id'] ) ? sanitize_text_field( wp_unslash( $_POST['session_id'] ) ) : '';
+        $message    = isset( $_POST['message'] )    ? sanitize_textarea_field( wp_unslash( $_POST['message'] ) ) : '';
+
+        if ( empty( $session_id ) || ! $this->is_valid_uuid( $session_id ) ) {
+            wp_send_json_error( [ 'message' => 'Invalid session.' ], 400 );
+        }
+
+        if ( empty( $message ) ) {
+            wp_send_json_error( [ 'message' => 'Message cannot be empty.' ], 400 );
+        }
+
+        if ( mb_strlen( $message ) > 500 ) {
+            wp_send_json_error( [ 'message' => 'Message too long (max 500 characters).' ], 400 );
+        }
+
+        $user = Carno_Livechat_Database::get_user_by_session( $session_id );
+
+        if ( ! $user ) {
+            wp_send_json_error( [ 'message' => 'Session not found.' ], 403 );
+        }
+
+        if ( (int) $user->is_banned === 1 ) {
+            wp_send_json_error( [ 'message' => 'banned' ], 403 );
+        }
+
+        if ( Carno_Livechat_Database::count_recent_user_messages( $session_id, 10 ) >= 5 ) {
+            wp_send_json_error( [ 'message' => 'rate_limit' ], 429 );
+        }
+
+        $id = Carno_Livechat_Database::insert_user_message( $message, $session_id, $user->name );
+
+        wp_send_json_success( [
+            'id'         => $id,
+            'message'    => $message,
+            'sent_by'    => $user->name,
+            'session_id' => $session_id,
+            'created_at' => current_time( 'mysql' ),
+        ] );
+    }
+
     public function heartbeat() {
         check_ajax_referer( 'carno_livechat_nonce', 'nonce' );
 

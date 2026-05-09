@@ -5,6 +5,15 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [2.8.0] - 2026-05-09
+
+- Added `Database::get_user_by_session($session_id)` — returns `id`, `name`, `is_banned` for a given session; used by send handler to verify user identity and ban status
+- Added `Public_Ajax::send_user_message()` — nonce validated; checks: chat enabled, valid UUID session, message not empty, max 500 chars, user exists, not banned (`is_banned=1` → 403 `banned`), rate limit max 5 messages per 10s per session (429 `rate_limit`); inserts via `Database::insert_user_message()`; returns full message object for immediate frontend render
+- Registered `livechat_send_message` AJAX action for both nopriv and authenticated users in `class-plugin.php`
+- Bumped plugin version to 2.8.0
+
+---
+
 ## [2.7.0] - 2026-05-09
 
 - Added Enter key support for chat input in `main.js` — one-time `keydown` listener in `startChat()`; triggers `sendBtn.click()` on Enter (without Shift); `e.preventDefault()` ensures correct behavior on mobile virtual keyboards; fires only when input is not disabled

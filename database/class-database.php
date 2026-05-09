@@ -145,6 +145,17 @@ class Carno_Livechat_Database {
         );
     }
 
+    public static function get_user_by_session( $session_id ) {
+        global $wpdb;
+
+        return $wpdb->get_row(
+            $wpdb->prepare(
+                'SELECT id, name, is_banned FROM ' . self::users_table() . ' WHERE session_id = %s LIMIT 1',
+                sanitize_text_field( $session_id )
+            )
+        );
+    }
+
     public static function count_all_users() {
         global $wpdb;
         return (int) $wpdb->get_var( 'SELECT COUNT(*) FROM ' . self::users_table() );
