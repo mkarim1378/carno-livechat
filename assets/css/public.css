@@ -270,25 +270,32 @@
 
 .clc-chat__send {
     flex-shrink: 0;
-    padding: 10px 18px;
-    background: #2c2d74;
-    color: #ffffff;
+    padding: 10px 16px;
+    background-color: #2c2d74;
+    color: #fff;
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
     font-size: 14px;
     font-family: inherit;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background-color 0.2s;
     white-space: nowrap;
 }
 
-.clc-chat__send:hover {
-    background: #14155c;
+.clc-chat__send:hover:not(:disabled) {
+    background-color: #14155c;
 }
 
 .clc-chat__send:disabled {
-    background: #9a9bc0;
+    background-color: #9a9bc0;
     cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+    .clc-chat__send {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
 }
 
 .clc-chat__ban-notice {

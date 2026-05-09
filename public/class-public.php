@@ -70,7 +70,7 @@ class Carno_Livechat_Public {
         $atts = shortcode_atts(
             [
                 'title'       => __( 'پشتیبانی آنلاین', 'carno-livechat' ),
-                'placeholder' => __( 'نام شما', 'carno-livechat' ),
+                'placeholder' => __( 'نام شما (فارسی بنویسید)', 'carno-livechat' ),
             ],
             $atts,
             'livechat'
