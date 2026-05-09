@@ -68,13 +68,12 @@
         },
 
         setBanned: function () {
-            var input = document.getElementById('clc-chat-input');
-            var btn   = document.getElementById('clc-send-btn');
-            if (input) {
-                input.disabled     = true;
-                input.placeholder  = 'شما از چت محروم شده‌اید';
-            }
-            if (btn) btn.style.display = 'none';
+            var input  = document.getElementById('clc-chat-input');
+            var btn    = document.getElementById('clc-send-btn');
+            var notice = document.getElementById('clc-ban-notice');
+            if (input)  input.style.display  = 'none';
+            if (btn)    btn.style.display    = 'none';
+            if (notice) notice.style.display = '';
         },
 
         setChatState: function (enabled) {

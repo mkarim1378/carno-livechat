@@ -21,6 +21,10 @@ class Carno_Livechat_Public_Ajax {
             wp_send_json_error( [ 'message' => 'Name too long.' ], 400 );
         }
 
+        if ( ! preg_match( '/^[\x{0600}-\x{065F}\x{0670}-\x{06EF}\x{200C}\x{200D}\s]+$/u', $name ) ) {
+            wp_send_json_error( [ 'message' => 'Name must contain only Persian characters.' ], 400 );
+        }
+
         if ( ! $this->is_valid_uuid( $session_id ) ) {
             wp_send_json_error( [ 'message' => 'Invalid session format.' ], 400 );
         }

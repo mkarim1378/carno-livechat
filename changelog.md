@@ -5,6 +5,18 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [2.12.0] - 2026-05-09
+
+- Confirmed JS/CSS assets only load on pages containing `[livechat]` shortcode via `is_livechat_page()` + `has_shortcode()` guard — no change needed
+- Added real-time Persian-only filtering to name input in `modal.js` — `input` event strips any character outside `[\u0600-\u065F\u0670-\u06EF\u200C\u200D\s]` (blocks English letters, Persian/Arabic numerals, and all other scripts); submit also validates and shows inline error via `#clc-name-error`
+- Added backend name validation in `Public_Ajax::register_user()` — `preg_match` with Unicode Persian range rejects non-Persian names with 400
+- Added `#clc-ban-notice` element to `chat-widget.php` footer (hidden by default)
+- Updated `Chat.setBanned()` in `chat.js` — hides input and send button, shows `#clc-ban-notice` with ban message instead of just disabling the input
+- Added `.clc-modal__error` and `.clc-chat__ban-notice` styles in `public.css`
+- Bumped plugin version to 2.12.0
+
+---
+
 ## [2.11.0] - 2026-05-09
 
 - Added `carno_livechat_chat_mode` option (`public` / `private`, default `public`)

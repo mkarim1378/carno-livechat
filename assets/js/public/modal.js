@@ -18,10 +18,19 @@
         init: function (onSuccess) {
             var btn   = document.getElementById('clc-name-submit');
             var input = document.getElementById('clc-name-input');
+            var error = document.getElementById('clc-name-error');
 
             if (!btn || !input) return;
 
             input.focus();
+
+            var persianOnly = /[^\u0600-\u065F\u0670-\u06EF\u200C\u200D\s]/g;
+
+            input.addEventListener('input', function () {
+                var before = input.value;
+                var after  = before.replace(persianOnly, '');
+                if (before !== after) input.value = after;
+            });
 
             btn.addEventListener('click', function () {
                 var name = input.value.trim();
@@ -31,6 +40,13 @@
                     return;
                 }
 
+                if (persianOnly.test(name) || !/[\u0600-\u06FF]/.test(name)) {
+                    if (error) error.textContent = 'لطفاً فقط حروف فارسی وارد کنید.';
+                    input.focus();
+                    return;
+                }
+
+                if (error) error.textContent = '';
                 btn.disabled = true;
 
                 var sessionId = CarnoLC.Session.generateId();

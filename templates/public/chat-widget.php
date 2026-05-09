@@ -21,6 +21,7 @@ $placeholder = isset( $placeholder ) ? $placeholder : __( 'نام شما', 'carn
             <button id="clc-name-submit" type="button">
                 <?php esc_html_e( 'ورود به گفتگو', 'carno-livechat' ); ?>
             </button>
+            <p id="clc-name-error" class="clc-modal__error"></p>
         </div>
     </div>
 
@@ -48,6 +49,9 @@ $placeholder = isset( $placeholder ) ? $placeholder : __( 'نام شما', 'carn
             <button id="clc-send-btn" class="clc-chat__send" type="button" style="display:none">
                 <?php esc_html_e( 'ارسال', 'carno-livechat' ); ?>
             </button>
+            <p id="clc-ban-notice" class="clc-chat__ban-notice" style="display:none">
+                <?php esc_html_e( 'شما از ارسال پیام محروم شده‌اید.', 'carno-livechat' ); ?>
+            </p>
         </div>
     </div>
 
