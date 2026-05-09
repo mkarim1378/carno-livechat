@@ -5,6 +5,17 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [2.13.0] - 2026-05-09
+
+- Stored `chat_mode` per message at write time — `Database::insert_user_message()` now accepts `$chat_mode` parameter and saves it to the `chat_mode` column; mode changes no longer retroactively affect old messages
+- Updated `Public_Ajax::send_user_message()` — reads current `carno_livechat_chat_mode` option and passes it to `insert_user_message()` so each message is tagged with the mode active at send time
+- Fixed `Public_Ajax::get_messages()` — now always passes `viewer_session` to `get_messages_since()` regardless of current mode; visibility is determined per-message by the stored `chat_mode` column, not the live option
+- Updated `Database::get_all_messages()` — now returns `chat_mode` column so admin panel can distinguish message types
+- Updated `admin.js` `renderMessageList()` — private user messages (where `chat_mode === 'private'`) display `(خصوصی)` prefix before the sender name in the user badge
+- Bumped plugin version to 2.13.0
+
+---
+
 ## [2.12.0] - 2026-05-09
 
 - Confirmed JS/CSS assets only load on pages containing `[livechat]` shortcode via `is_livechat_page()` + `has_shortcode()` guard — no change needed

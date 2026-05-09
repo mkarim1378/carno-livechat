@@ -45,12 +45,9 @@ class Carno_Livechat_Public_Ajax {
         $last_id    = isset( $_POST['last_id'] )    ? absint( $_POST['last_id'] )                                        : 0;
         $session_id = isset( $_POST['session_id'] ) ? sanitize_text_field( wp_unslash( $_POST['session_id'] ) ) : '';
 
-        $mode            = get_option( 'carno_livechat_chat_mode', 'public' );
-        $private_session = ( $mode === 'private' && $session_id && $this->is_valid_uuid( $session_id ) )
-            ? $session_id
-            : null;
+        $viewer_session = ( $session_id && $this->is_valid_uuid( $session_id ) ) ? $session_id : null;
 
-        $messages    = Carno_Livechat_Database::get_messages_since( $last_id, 50, $private_session );
+        $messages    = Carno_Livechat_Database::get_messages_since( $last_id, 50, $viewer_session );
         $deleted_ids = Carno_Livechat_Database::get_deleted_ids();
 
         $is_banned = $session_id && $this->is_valid_uuid( $session_id )
@@ -101,7 +98,8 @@ class Carno_Livechat_Public_Ajax {
             wp_send_json_error( [ 'message' => 'rate_limit' ], 429 );
         }
 
-        $id = Carno_Livechat_Database::insert_user_message( $message, $session_id, $user->name );
+        $chat_mode = get_option( 'carno_livechat_chat_mode', 'public' );
+        $id        = Carno_Livechat_Database::insert_user_message( $message, $session_id, $user->name, $chat_mode );
 
         wp_send_json_success( [
             'id'         => $id,

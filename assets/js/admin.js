@@ -257,7 +257,9 @@
             if (isUserMsg) {
                 var senderBadge = document.createElement('span');
                 senderBadge.className   = 'clc-admin__user-badge';
-                senderBadge.textContent = msg.sent_by;
+                senderBadge.textContent = msg.chat_mode === 'private'
+                    ? '(خصوصی) ' + msg.sent_by
+                    : msg.sent_by;
                 row.appendChild(senderBadge);
             }
 

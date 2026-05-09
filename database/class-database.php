@@ -47,6 +47,7 @@ class Carno_Livechat_Database {
             message    TEXT            NOT NULL,
             sent_by    VARCHAR(100)    NOT NULL DEFAULT 'admin',
             session_id VARCHAR(64)     NULL DEFAULT NULL,
+            chat_mode  VARCHAR(10)     NULL DEFAULT NULL,
             is_deleted TINYINT(1)      NOT NULL DEFAULT 0,
             created_at DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (id),
@@ -71,6 +72,11 @@ class Carno_Livechat_Database {
         $col = $wpdb->get_var( "SHOW COLUMNS FROM `{$table}` LIKE 'session_id'" );
         if ( ! $col ) {
             $wpdb->query( "ALTER TABLE `{$table}` ADD COLUMN `session_id` VARCHAR(64) NULL DEFAULT NULL" );
+        }
+
+        $col = $wpdb->get_var( "SHOW COLUMNS FROM `{$table}` LIKE 'chat_mode'" );
+        if ( ! $col ) {
+            $wpdb->query( "ALTER TABLE `{$table}` ADD COLUMN `chat_mode` VARCHAR(10) NULL DEFAULT NULL" );
         }
 
         $users_table = self::users_table();
@@ -245,40 +251,50 @@ class Carno_Livechat_Database {
         return (int) $wpdb->insert_id;
     }
 
-    public static function get_messages_since( $last_id = 0, $limit = 50, $private_session = null ) {
+    public static function get_messages_since( $last_id = 0, $limit = 50, $viewer_session = null ) {
         global $wpdb;
 
         $last_id = absint( $last_id );
         $limit   = absint( $limit );
         $table   = self::messages_table();
 
-        if ( $private_session !== null ) {
-            $session = sanitize_text_field( $private_session );
+        // Visibility rule (per-message chat_mode, set at send time):
+        //   session_id IS NULL  → admin broadcast, always visible
+        //   chat_mode = 'public' → user message sent while public, visible to all
+        //   chat_mode = 'private' AND session_id = viewer → visible only to sender
+
+        if ( $viewer_session !== null ) {
+            $session = sanitize_text_field( $viewer_session );
+            $where   = "is_deleted = 0 AND (
+                            session_id IS NULL
+                            OR chat_mode = 'public'
+                            OR (chat_mode = 'private' AND session_id = %s)
+                        )";
             if ( $last_id === 0 ) {
                 return $wpdb->get_results(
                     $wpdb->prepare(
-                        "SELECT id, message, sent_by, session_id, created_at FROM {$table}
-                         WHERE is_deleted = 0 AND (session_id IS NULL OR session_id = %s)
-                         ORDER BY id ASC LIMIT %d",
+                        "SELECT id, message, sent_by, session_id, chat_mode, created_at FROM {$table}
+                         WHERE {$where} ORDER BY id ASC LIMIT %d",
                         $session, $limit
                     )
                 );
             }
             return $wpdb->get_results(
                 $wpdb->prepare(
-                    "SELECT id, message, sent_by, session_id, created_at FROM {$table}
-                     WHERE id > %d AND is_deleted = 0 AND (session_id IS NULL OR session_id = %s)
-                     ORDER BY id ASC LIMIT %d",
+                    "SELECT id, message, sent_by, session_id, chat_mode, created_at FROM {$table}
+                     WHERE id > %d AND {$where} ORDER BY id ASC LIMIT %d",
                     $last_id, $session, $limit
                 )
             );
         }
 
+        // No session: show only admin messages and public user messages
         if ( $last_id === 0 ) {
             return $wpdb->get_results(
                 $wpdb->prepare(
-                    "SELECT id, message, sent_by, session_id, created_at FROM {$table}
-                     WHERE is_deleted = 0 ORDER BY id ASC LIMIT %d",
+                    "SELECT id, message, sent_by, session_id, chat_mode, created_at FROM {$table}
+                     WHERE is_deleted = 0 AND (session_id IS NULL OR chat_mode = 'public')
+                     ORDER BY id ASC LIMIT %d",
                     $limit
                 )
             );
@@ -286,14 +302,15 @@ class Carno_Livechat_Database {
 
         return $wpdb->get_results(
             $wpdb->prepare(
-                "SELECT id, message, sent_by, session_id, created_at FROM {$table}
-                 WHERE id > %d AND is_deleted = 0 ORDER BY id ASC LIMIT %d",
+                "SELECT id, message, sent_by, session_id, chat_mode, created_at FROM {$table}
+                 WHERE id > %d AND is_deleted = 0 AND (session_id IS NULL OR chat_mode = 'public')
+                 ORDER BY id ASC LIMIT %d",
                 $last_id, $limit
             )
         );
     }
 
-    public static function insert_user_message( $message, $session_id, $user_name ) {
+    public static function insert_user_message( $message, $session_id, $user_name, $chat_mode = 'public' ) {
         global $wpdb;
 
         $wpdb->insert(
@@ -302,9 +319,10 @@ class Carno_Livechat_Database {
                 'message'    => sanitize_textarea_field( $message ),
                 'sent_by'    => sanitize_text_field( $user_name ),
                 'session_id' => sanitize_text_field( $session_id ),
+                'chat_mode'  => in_array( $chat_mode, [ 'public', 'private' ], true ) ? $chat_mode : 'public',
                 'created_at' => current_time( 'mysql' ),
             ],
-            [ '%s', '%s', '%s', '%s' ]
+            [ '%s', '%s', '%s', '%s', '%s' ]
         );
 
         return (int) $wpdb->insert_id;
@@ -338,7 +356,7 @@ class Carno_Livechat_Database {
 
         return $wpdb->get_results(
             $wpdb->prepare(
-                'SELECT id, message, sent_by, session_id, created_at FROM ' . self::messages_table() .
+                'SELECT id, message, sent_by, session_id, chat_mode, created_at FROM ' . self::messages_table() .
                 ' WHERE is_deleted = 0 ORDER BY id DESC LIMIT %d',
                 absint( $limit )
             )
