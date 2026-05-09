@@ -5,6 +5,19 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [2.7.0] - 2026-05-09
+
+- Added Enter key support for chat input in `main.js` — one-time `keydown` listener in `startChat()`; triggers `sendBtn.click()` on Enter (without Shift); `e.preventDefault()` ensures correct behavior on mobile virtual keyboards; fires only when input is not disabled
+- Added `session_id VARCHAR(64) NULL DEFAULT NULL` column to `wp_livechat_messages` schema in `create_tables()` — NULL = admin broadcast, non-null = user message
+- Added `is_banned TINYINT(1) NOT NULL DEFAULT 0` column to `wp_livechat_users` schema in `create_tables()` — prepared for Phase 5 ban/unban
+- Updated `maybe_upgrade()` — zero-downtime migration for both new columns on existing installs via `SHOW COLUMNS` + `ALTER TABLE`
+- Updated `Database::get_messages_since()` — now selects `session_id` alongside existing columns so frontend can differentiate message origin
+- Added `Database::insert_user_message($message, $session_id, $user_name)` — inserts user message with session linkage
+- Added `Database::count_recent_user_messages($session_id, $seconds)` — counts messages from a session in the last N seconds; used for rate limiting in Phase 3
+- Bumped plugin version to 2.7.0
+
+---
+
 ## [2.6.0] - 2026-05-09
 
 - Added `carno_livechat_chat_enabled` option in `wp_options` to store chat enabled/disabled state

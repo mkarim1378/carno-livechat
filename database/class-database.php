@@ -34,6 +34,7 @@ class Carno_Livechat_Database {
             session_id VARCHAR(64)     NOT NULL,
             page_url   TEXT,
             ip_address VARCHAR(45),
+            is_banned  TINYINT(1)      NOT NULL DEFAULT 0,
             created_at DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
             last_seen  DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (id),
@@ -45,6 +46,7 @@ class Carno_Livechat_Database {
             id         BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
             message    TEXT            NOT NULL,
             sent_by    VARCHAR(100)    NOT NULL DEFAULT 'admin',
+            session_id VARCHAR(64)     NULL DEFAULT NULL,
             is_deleted TINYINT(1)      NOT NULL DEFAULT 0,
             created_at DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (id),
@@ -60,10 +62,21 @@ class Carno_Livechat_Database {
         global $wpdb;
 
         $table = self::messages_table();
-        $col   = $wpdb->get_var( "SHOW COLUMNS FROM `{$table}` LIKE 'is_deleted'" );
 
+        $col = $wpdb->get_var( "SHOW COLUMNS FROM `{$table}` LIKE 'is_deleted'" );
         if ( ! $col ) {
             $wpdb->query( "ALTER TABLE `{$table}` ADD COLUMN `is_deleted` TINYINT(1) NOT NULL DEFAULT 0" );
+        }
+
+        $col = $wpdb->get_var( "SHOW COLUMNS FROM `{$table}` LIKE 'session_id'" );
+        if ( ! $col ) {
+            $wpdb->query( "ALTER TABLE `{$table}` ADD COLUMN `session_id` VARCHAR(64) NULL DEFAULT NULL" );
+        }
+
+        $users_table = self::users_table();
+        $col = $wpdb->get_var( "SHOW COLUMNS FROM `{$users_table}` LIKE 'is_banned'" );
+        if ( ! $col ) {
+            $wpdb->query( "ALTER TABLE `{$users_table}` ADD COLUMN `is_banned` TINYINT(1) NOT NULL DEFAULT 0" );
         }
     }
 
@@ -190,7 +203,7 @@ class Carno_Livechat_Database {
         if ( $last_id === 0 ) {
             return $wpdb->get_results(
                 $wpdb->prepare(
-                    'SELECT id, message, sent_by, created_at FROM ' . self::messages_table() .
+                    'SELECT id, message, sent_by, session_id, created_at FROM ' . self::messages_table() .
                     ' WHERE is_deleted = 0 ORDER BY id ASC LIMIT %d',
                     $limit
                 )
@@ -199,10 +212,40 @@ class Carno_Livechat_Database {
 
         return $wpdb->get_results(
             $wpdb->prepare(
-                'SELECT id, message, sent_by, created_at FROM ' . self::messages_table() .
+                'SELECT id, message, sent_by, session_id, created_at FROM ' . self::messages_table() .
                 ' WHERE id > %d AND is_deleted = 0 ORDER BY id ASC LIMIT %d',
                 $last_id,
                 $limit
+            )
+        );
+    }
+
+    public static function insert_user_message( $message, $session_id, $user_name ) {
+        global $wpdb;
+
+        $wpdb->insert(
+            self::messages_table(),
+            [
+                'message'    => sanitize_textarea_field( $message ),
+                'sent_by'    => sanitize_text_field( $user_name ),
+                'session_id' => sanitize_text_field( $session_id ),
+                'created_at' => current_time( 'mysql' ),
+            ],
+            [ '%s', '%s', '%s', '%s' ]
+        );
+
+        return (int) $wpdb->insert_id;
+    }
+
+    public static function count_recent_user_messages( $session_id, $seconds = 10 ) {
+        global $wpdb;
+
+        return (int) $wpdb->get_var(
+            $wpdb->prepare(
+                'SELECT COUNT(*) FROM ' . self::messages_table() .
+                ' WHERE session_id = %s AND is_deleted = 0 AND created_at >= DATE_SUB(NOW(), INTERVAL %d SECOND)',
+                sanitize_text_field( $session_id ),
+                absint( $seconds )
             )
         );
     }
