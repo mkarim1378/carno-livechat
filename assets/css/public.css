@@ -158,6 +158,41 @@
     word-break: break-word;
 }
 
+/* Own message (current user) */
+
+.clc-message--own {
+    align-self: flex-end;
+    background: #2c2d74;
+    border-color: #2c2d74;
+    border-radius: 12px 4px 12px 12px;
+    color: #ffffff;
+}
+
+.clc-message--own .clc-message__text a {
+    color: #c5c8f0;
+}
+
+.clc-message--own .clc-message__meta {
+    color: rgba(255, 255, 255, 0.55);
+    text-align: right;
+}
+
+/* Other user message */
+
+.clc-message--user {
+    background: #f0f4ff;
+    border-color: #d5e0ff;
+    border-radius: 4px 12px 12px 12px;
+}
+
+.clc-message__sender {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: #2c2d74;
+    margin-bottom: 3px;
+}
+
 .clc-message__text {
     display: block;
     white-space: pre-wrap;

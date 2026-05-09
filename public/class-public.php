@@ -35,15 +35,16 @@ class Carno_Livechat_Public {
         $base = CARNO_LIVECHAT_URL . 'assets/js/public/';
         $ver  = $this->version;
 
-        wp_enqueue_script( 'clc-session',   $base . 'session.js',   [],                                                        $ver, true );
-        wp_enqueue_script( 'clc-modal',     $base . 'modal.js',     [ 'clc-session' ],                                        $ver, true );
-        wp_enqueue_script( 'clc-heartbeat', $base . 'heartbeat.js', [ 'clc-session' ],                                        $ver, true );
-        wp_enqueue_script( 'clc-chat',      $base . 'chat.js',      [],                                                        $ver, true );
-        wp_enqueue_script( 'clc-polling',   $base . 'polling.js',   [ 'clc-session', 'clc-chat' ],                            $ver, true );
+        wp_enqueue_script( 'clc-session',   $base . 'session.js',   [],                                                                    $ver, true );
+        wp_enqueue_script( 'clc-modal',     $base . 'modal.js',     [ 'clc-session' ],                                                    $ver, true );
+        wp_enqueue_script( 'clc-heartbeat', $base . 'heartbeat.js', [ 'clc-session' ],                                                    $ver, true );
+        wp_enqueue_script( 'clc-chat',      $base . 'chat.js',      [ 'clc-session' ],                                                    $ver, true );
+        wp_enqueue_script( 'clc-polling',   $base . 'polling.js',   [ 'clc-session', 'clc-chat' ],                                        $ver, true );
+        wp_enqueue_script( 'clc-input',     $base . 'input.js',     [ 'clc-session', 'clc-chat', 'clc-polling' ],                         $ver, true );
         wp_enqueue_script(
             $this->plugin_name,
             $base . 'main.js',
-            [ 'clc-session', 'clc-modal', 'clc-heartbeat', 'clc-chat', 'clc-polling' ],
+            [ 'clc-session', 'clc-modal', 'clc-heartbeat', 'clc-chat', 'clc-polling', 'clc-input' ],
             $ver,
             true
         );

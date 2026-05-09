@@ -12,10 +12,25 @@
             var empty = list.querySelector('.clc-chat__empty');
             if (empty) empty.parentNode.removeChild(empty);
 
+            var session   = CarnoLC.Session ? CarnoLC.Session.get() : null;
+            var mySession = session ? session.session_id : null;
+
             messages.forEach(function (msg) {
+                var isOwn  = msg.session_id && msg.session_id === mySession;
+                var isUser = msg.session_id && msg.session_id !== mySession;
+
                 var bubble = document.createElement('div');
-                bubble.className    = 'clc-message';
-                bubble.dataset.id   = msg.id;
+                bubble.dataset.id = msg.id;
+                bubble.className  = 'clc-message' +
+                    (isOwn  ? ' clc-message--own'  : '') +
+                    (isUser ? ' clc-message--user' : '');
+
+                if (isUser) {
+                    var sender = document.createElement('span');
+                    sender.className   = 'clc-message__sender';
+                    sender.textContent = msg.sent_by;
+                    bubble.appendChild(sender);
+                }
 
                 var text = document.createElement('span');
                 text.className = 'clc-message__text';
@@ -50,6 +65,16 @@
                 empty.textContent = 'هنوز پیامی ارسال نشده است.';
                 list.appendChild(empty);
             }
+        },
+
+        setBanned: function () {
+            var input = document.getElementById('clc-chat-input');
+            var btn   = document.getElementById('clc-send-btn');
+            if (input) {
+                input.disabled     = true;
+                input.placeholder  = 'شما از چت محروم شده‌اید';
+            }
+            if (btn) btn.style.display = 'none';
         },
 
         setChatState: function (enabled) {

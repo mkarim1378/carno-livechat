@@ -6,17 +6,17 @@
         if (chat) chat.classList.add('clc-chat--visible');
         CarnoLC.Heartbeat.start(sessionId);
         CarnoLC.Chat.setChatState(!!CarnoLivechat.chat_enabled);
+        CarnoLC.Input.init(sessionId);
         CarnoLC.Polling.start(function () {
             CarnoLC.Chat.renderWelcome(name);
         });
 
-        var input   = document.getElementById('clc-chat-input');
-        var sendBtn = document.getElementById('clc-send-btn');
-        if (input && sendBtn) {
+        var input = document.getElementById('clc-chat-input');
+        if (input) {
             input.addEventListener('keydown', function (e) {
                 if (e.key === 'Enter' && !e.shiftKey && !input.disabled) {
                     e.preventDefault();
-                    sendBtn.click();
+                    CarnoLC.Input.send();
                 }
             });
         }

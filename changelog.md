@@ -5,6 +5,18 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [2.9.0] - 2026-05-09
+
+- Created `assets/js/public/input.js` — `CarnoLC.Input.init(sessionId)` wires send button click; `send()` POSTs to `livechat_send_message`, clears input, immediately renders own message via `Chat.render()`, advances `Polling._lastId` to prevent duplicate render on next poll; handles `banned` (calls `Chat.setBanned()`) and `rate_limit` (2s button flash) error codes; button disabled during request
+- Added `CarnoLC.Chat.setBanned()` in `chat.js` — disables input, sets Persian ban placeholder, hides send button
+- Updated `Chat.render()` in `chat.js` — compares each message's `session_id` against current user session; own messages get `.clc-message--own` (right-aligned, brand color); other users' messages get `.clc-message--user` (light blue); other users' bubbles show sender name via `.clc-message__sender`
+- Updated `main.js` — calls `CarnoLC.Input.init(sessionId)` in `startChat()`; Enter key now calls `CarnoLC.Input.send()` directly
+- Updated `class-public.php` — enqueues `clc-input` (input.js) with correct dependency chain; added `clc-session` dependency to `clc-chat`
+- Added `.clc-message--own`, `.clc-message--user`, `.clc-message__sender` styles in `public.css`
+- Bumped plugin version to 2.9.0
+
+---
+
 ## [2.8.0] - 2026-05-09
 
 - Added `Database::get_user_by_session($session_id)` — returns `id`, `name`, `is_banned` for a given session; used by send handler to verify user identity and ban status
