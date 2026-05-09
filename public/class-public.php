@@ -86,11 +86,29 @@ class Carno_Livechat_Public {
     }
 
     public function render_viewer_shortcode() {
+        static $script_printed = false;
+
         $real  = Carno_Livechat_Database::count_online_users();
-        $count = get_option( 'carno_livechat_live_mode', 0 )
-            ? $real * 2 + 12
-            : $real;
-        return '<span>' . esc_html( $count ) . '</span>';
+        $count = get_option( 'carno_livechat_live_mode', 0 ) ? $real * 2 + 12 : $real;
+
+        $html = '<span class="clc-viewer-count">' . esc_html( $count ) . '</span>';
+
+        if ( ! $script_printed ) {
+            $script_printed = true;
+            $ajax_url       = esc_url( admin_url( 'admin-ajax.php' ) );
+            $html .= '<script>(function(){';
+            $html .= 'var u=' . wp_json_encode( $ajax_url ) . ';';
+            $html .= 'function f(){var x=new XMLHttpRequest();x.open("POST",u,true);';
+            $html .= 'x.setRequestHeader("Content-Type","application/x-www-form-urlencoded");';
+            $html .= 'x.onload=function(){try{var r=JSON.parse(x.responseText);if(r.success){';
+            $html .= 'var els=document.querySelectorAll(".clc-viewer-count");';
+            $html .= 'for(var i=0;i<els.length;i++)els[i].textContent=r.data.count;';
+            $html .= '}}catch(e){}};x.send("action=livechat_viewer_count");}';
+            $html .= 'setInterval(f,10000);';
+            $html .= '}());</script>';
+        }
+
+        return $html;
     }
 
     private function is_livechat_page() {

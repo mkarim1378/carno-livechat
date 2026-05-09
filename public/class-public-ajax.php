@@ -124,6 +124,14 @@ class Carno_Livechat_Public_Ajax {
         wp_send_json_success();
     }
 
+    public function get_viewer_count() {
+        $real  = Carno_Livechat_Database::count_online_users();
+        $count = get_option( 'carno_livechat_live_mode', 0 )
+            ? $real * 2 + 12
+            : $real;
+        wp_send_json_success( [ 'count' => (int) $count ] );
+    }
+
     private function is_valid_uuid( $uuid ) {
         return (bool) preg_match(
             '/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i',
