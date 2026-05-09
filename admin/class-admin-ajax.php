@@ -131,6 +131,24 @@ class Carno_Livechat_Admin_Ajax {
         wp_send_json_success();
     }
 
+    public function set_chat_mode() {
+        check_ajax_referer( 'carno_livechat_admin_nonce', 'nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( [ 'message' => 'Unauthorized.' ], 403 );
+        }
+
+        $mode = isset( $_POST['mode'] ) ? sanitize_text_field( wp_unslash( $_POST['mode'] ) ) : '';
+
+        if ( ! in_array( $mode, [ 'public', 'private' ], true ) ) {
+            wp_send_json_error( [ 'message' => 'Invalid mode.' ], 400 );
+        }
+
+        update_option( 'carno_livechat_chat_mode', $mode );
+
+        wp_send_json_success( [ 'chat_mode' => $mode ] );
+    }
+
     public function toggle_chat() {
         check_ajax_referer( 'carno_livechat_admin_nonce', 'nonce' );
 

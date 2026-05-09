@@ -22,6 +22,18 @@ if ( ! current_user_can( 'manage_options' ) ) {
                 <?php echo get_option( 'carno_livechat_chat_enabled' ) ? esc_html__( 'Enabled', 'carno-livechat' ) : esc_html__( 'Disabled', 'carno-livechat' ); ?>
             </button>
         </div>
+        <?php $chat_mode = get_option( 'carno_livechat_chat_mode', 'public' ); ?>
+        <div class="clc-admin__chat-toggle">
+            <span class="clc-admin__stat-label"><?php esc_html_e( 'Chat Mode:', 'carno-livechat' ); ?></span>
+            <div class="clc-admin__mode-btns">
+                <button data-mode="public" class="button clc-admin__mode-btn<?php echo $chat_mode === 'public' ? ' clc-admin__mode-btn--active' : ''; ?>">
+                    <?php esc_html_e( 'Public', 'carno-livechat' ); ?>
+                </button>
+                <button data-mode="private" class="button clc-admin__mode-btn<?php echo $chat_mode === 'private' ? ' clc-admin__mode-btn--active' : ''; ?>">
+                    <?php esc_html_e( 'Private', 'carno-livechat' ); ?>
+                </button>
+            </div>
+        </div>
     </div>
 
     <div class="clc-admin__shortcode-info">

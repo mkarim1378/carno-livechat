@@ -5,6 +5,20 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [2.11.0] - 2026-05-09
+
+- Added `carno_livechat_chat_mode` option (`public` / `private`, default `public`)
+- Added `Admin_Ajax::set_chat_mode()` — validates mode value, saves to options, returns new mode; wired as `wp_ajax_livechat_set_chat_mode`
+- Updated `Database::get_messages_since()` — added `$private_session` parameter; in private mode filters to `session_id IS NULL OR session_id = ?` so each user only sees admin broadcasts and their own messages
+- Updated `Public_Ajax::get_messages()` — reads `chat_mode` option; passes session_id to DB query as filter in private mode; public mode is unchanged
+- Updated `broadcast-panel.php` — added Public/Private segmented button group in topbar
+- Updated `admin.js` — mode buttons toggle active state via AJAX; both buttons disabled during request to prevent race conditions
+- Added `chat_mode` to `CarnoLivechatAdmin` localized data in `class-admin.php`
+- Added `.clc-admin__mode-btns`, `.clc-admin__mode-btn`, `.clc-admin__mode-btn--active` styles in `admin.css`
+- Bumped plugin version to 2.11.0
+
+---
+
 ## [2.10.0] - 2026-05-09
 
 - Added `Database::ban_user()`, `unban_user()`, `is_user_banned()` — set/clear/read `is_banned` flag on users table

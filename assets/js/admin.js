@@ -379,6 +379,38 @@
             refreshUsersBtn.addEventListener('click', fetchUsers);
         }
 
+        document.querySelectorAll('.clc-admin__mode-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var mode = btn.dataset.mode;
+                if (btn.classList.contains('clc-admin__mode-btn--active')) return;
+
+                document.querySelectorAll('.clc-admin__mode-btn').forEach(function (b) {
+                    b.disabled = true;
+                });
+
+                post(
+                    { action: 'livechat_set_chat_mode', nonce: CarnoLivechatAdmin.nonce, mode: mode },
+                    function (res) {
+                        if (res.success) {
+                            document.querySelectorAll('.clc-admin__mode-btn').forEach(function (b) {
+                                b.classList.toggle('clc-admin__mode-btn--active', b.dataset.mode === mode);
+                                b.disabled = false;
+                            });
+                        } else {
+                            document.querySelectorAll('.clc-admin__mode-btn').forEach(function (b) {
+                                b.disabled = false;
+                            });
+                        }
+                    },
+                    function () {
+                        document.querySelectorAll('.clc-admin__mode-btn').forEach(function (b) {
+                            b.disabled = false;
+                        });
+                    }
+                );
+            });
+        });
+
         var toggleChatBtn = document.getElementById('clc-toggle-chat');
         if (toggleChatBtn) {
             toggleChatBtn.addEventListener('click', function () {

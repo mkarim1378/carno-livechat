@@ -245,17 +245,40 @@ class Carno_Livechat_Database {
         return (int) $wpdb->insert_id;
     }
 
-    public static function get_messages_since( $last_id = 0, $limit = 50 ) {
+    public static function get_messages_since( $last_id = 0, $limit = 50, $private_session = null ) {
         global $wpdb;
 
         $last_id = absint( $last_id );
         $limit   = absint( $limit );
+        $table   = self::messages_table();
+
+        if ( $private_session !== null ) {
+            $session = sanitize_text_field( $private_session );
+            if ( $last_id === 0 ) {
+                return $wpdb->get_results(
+                    $wpdb->prepare(
+                        "SELECT id, message, sent_by, session_id, created_at FROM {$table}
+                         WHERE is_deleted = 0 AND (session_id IS NULL OR session_id = %s)
+                         ORDER BY id ASC LIMIT %d",
+                        $session, $limit
+                    )
+                );
+            }
+            return $wpdb->get_results(
+                $wpdb->prepare(
+                    "SELECT id, message, sent_by, session_id, created_at FROM {$table}
+                     WHERE id > %d AND is_deleted = 0 AND (session_id IS NULL OR session_id = %s)
+                     ORDER BY id ASC LIMIT %d",
+                    $last_id, $session, $limit
+                )
+            );
+        }
 
         if ( $last_id === 0 ) {
             return $wpdb->get_results(
                 $wpdb->prepare(
-                    'SELECT id, message, sent_by, session_id, created_at FROM ' . self::messages_table() .
-                    ' WHERE is_deleted = 0 ORDER BY id ASC LIMIT %d',
+                    "SELECT id, message, sent_by, session_id, created_at FROM {$table}
+                     WHERE is_deleted = 0 ORDER BY id ASC LIMIT %d",
                     $limit
                 )
             );
@@ -263,10 +286,9 @@ class Carno_Livechat_Database {
 
         return $wpdb->get_results(
             $wpdb->prepare(
-                'SELECT id, message, sent_by, session_id, created_at FROM ' . self::messages_table() .
-                ' WHERE id > %d AND is_deleted = 0 ORDER BY id ASC LIMIT %d',
-                $last_id,
-                $limit
+                "SELECT id, message, sent_by, session_id, created_at FROM {$table}
+                 WHERE id > %d AND is_deleted = 0 ORDER BY id ASC LIMIT %d",
+                $last_id, $limit
             )
         );
     }

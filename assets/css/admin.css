@@ -3,7 +3,7 @@
    ========================================================================== */
 
 .clc-admin {
-    max-width: 680px;
+    max-width: 780px;
 }
 
 .clc-admin h1 {
@@ -43,6 +43,33 @@
     font-weight: 600 !important;
     color: #999 !important;
     border-color: #ccc !important;
+}
+
+.clc-admin__mode-btns {
+    display: flex;
+    gap: 0;
+}
+
+.clc-admin__mode-btn {
+    border-radius: 0 !important;
+    font-weight: 600 !important;
+    color: #999 !important;
+    border-color: #ccc !important;
+}
+
+.clc-admin__mode-btn:first-child {
+    border-radius: 4px 0 0 4px !important;
+}
+
+.clc-admin__mode-btn:last-child {
+    border-radius: 0 4px 4px 0 !important;
+    border-right-width: 1px;
+}
+
+.clc-admin__mode-btn--active {
+    background: #2c2d74 !important;
+    color: #fff !important;
+    border-color: #2c2d74 !important;
 }
 
 .clc-admin__toggle-btn--on {
