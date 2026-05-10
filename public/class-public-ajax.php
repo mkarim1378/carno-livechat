@@ -125,12 +125,38 @@ class Carno_Livechat_Public_Ajax {
         wp_send_json_success();
     }
 
+    public static function compute_viewer_count() {
+        $real = Carno_Livechat_Database::count_online_users();
+
+        if ( ! get_option( 'carno_livechat_live_mode', 0 ) ) {
+            return (int) $real;
+        }
+
+        $base = $real * 2 + 12;
+
+        if ( $base < 290 ) {
+            return (int) $base;
+        }
+
+        $last = get_transient( 'clc_viewer_last_displayed' );
+
+        if ( $last === false ) {
+            $count = rand( 290, 296 );
+        } else {
+            $count = (int) $last + rand( -3, 3 );
+            if ( $count < 290 ) $count = 290;
+            if ( $count > 300 ) $count = rand( 297, 300 );
+            // Avoid sticking at 300 — push back down 80% of the time
+            if ( $count === 300 && rand( 1, 10 ) <= 8 ) $count = rand( 295, 299 );
+        }
+
+        set_transient( 'clc_viewer_last_displayed', $count, 300 );
+
+        return $count;
+    }
+
     public function get_viewer_count() {
-        $real  = Carno_Livechat_Database::count_online_users();
-        $count = get_option( 'carno_livechat_live_mode', 0 )
-            ? $real * 2 + 12
-            : $real;
-        wp_send_json_success( [ 'count' => (int) $count ] );
+        wp_send_json_success( [ 'count' => self::compute_viewer_count() ] );
     }
 
     private function is_valid_uuid( $uuid ) {

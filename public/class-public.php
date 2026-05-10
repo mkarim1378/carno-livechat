@@ -88,8 +88,7 @@ class Carno_Livechat_Public {
     public function render_viewer_shortcode() {
         static $script_printed = false;
 
-        $real  = Carno_Livechat_Database::count_online_users();
-        $count = get_option( 'carno_livechat_live_mode', 0 ) ? $real * 2 + 12 : $real;
+        $count = Carno_Livechat_Public_Ajax::compute_viewer_count();
 
         $html = '<span class="clc-viewer-count">' . esc_html( $count ) . '</span>';
 
