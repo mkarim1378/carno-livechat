@@ -251,12 +251,32 @@ class Carno_Livechat_Database {
         return (int) $wpdb->insert_id;
     }
 
-    public static function get_messages_since( $last_id = 0, $limit = 50, $viewer_session = null ) {
+    public static function get_messages_since( $last_id = 0, $limit = 50, $viewer_session = null, $show_all = false ) {
         global $wpdb;
 
         $last_id = absint( $last_id );
         $limit   = absint( $limit );
         $table   = self::messages_table();
+
+        // Admin bypass: show every non-deleted message regardless of chat_mode
+        if ( $show_all ) {
+            if ( $last_id === 0 ) {
+                return $wpdb->get_results(
+                    $wpdb->prepare(
+                        "SELECT id, message, sent_by, session_id, chat_mode, created_at FROM {$table}
+                         WHERE is_deleted = 0 ORDER BY id ASC LIMIT %d",
+                        $limit
+                    )
+                );
+            }
+            return $wpdb->get_results(
+                $wpdb->prepare(
+                    "SELECT id, message, sent_by, session_id, chat_mode, created_at FROM {$table}
+                     WHERE id > %d AND is_deleted = 0 ORDER BY id ASC LIMIT %d",
+                    $last_id, $limit
+                )
+            );
+        }
 
         // Visibility rule (per-message chat_mode, set at send time):
         //   session_id IS NULL  → admin broadcast, always visible

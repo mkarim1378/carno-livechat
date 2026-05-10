@@ -45,9 +45,10 @@ class Carno_Livechat_Public_Ajax {
         $last_id    = isset( $_POST['last_id'] )    ? absint( $_POST['last_id'] )                                        : 0;
         $session_id = isset( $_POST['session_id'] ) ? sanitize_text_field( wp_unslash( $_POST['session_id'] ) ) : '';
 
+        $is_admin       = current_user_can( 'manage_options' );
         $viewer_session = ( $session_id && $this->is_valid_uuid( $session_id ) ) ? $session_id : null;
 
-        $messages    = Carno_Livechat_Database::get_messages_since( $last_id, 50, $viewer_session );
+        $messages    = Carno_Livechat_Database::get_messages_since( $last_id, 50, $viewer_session, $is_admin );
         $deleted_ids = Carno_Livechat_Database::get_deleted_ids();
 
         $is_banned = $session_id && $this->is_valid_uuid( $session_id )
