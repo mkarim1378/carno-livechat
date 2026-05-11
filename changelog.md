@@ -5,6 +5,16 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [2.14.0] - 2026-05-11
+
+**Performance**
+- Merged heartbeat into poll — `get_messages()` now calls `update_last_seen()` internally when a valid session is present; `Heartbeat.start()` removed from `main.js`; `heartbeat_interval` removed from localized script; eliminates ~20% of all AJAX requests under load
+- Added configurable polling interval setting in admin panel — `carno_livechat_polling_interval` option (5–60s, default 10s); saved via `livechat_save_polling_interval` AJAX action; passed to frontend via `wp_localize_script()`; includes description and recommended-value note for admins
+- Optimized `Database::get_deleted_ids()` — added `created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)` filter; prevents full-table scan as deleted messages accumulate over time
+- Bumped plugin version to 2.14.0
+
+---
+
 ## [2.13.0] - 2026-05-09
 
 - Stored `chat_mode` per message at write time — `Database::insert_user_message()` now accepts `$chat_mode` parameter and saves it to the `chat_mode` column; mode changes no longer retroactively affect old messages

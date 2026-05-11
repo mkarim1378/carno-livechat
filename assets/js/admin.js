@@ -413,6 +413,40 @@
             });
         });
 
+        var savePollingBtn = document.getElementById('clc-save-polling-interval');
+        if (savePollingBtn) {
+            savePollingBtn.addEventListener('click', function () {
+                var input    = document.getElementById('clc-polling-interval');
+                var feedback = document.getElementById('clc-polling-feedback');
+                var seconds  = parseInt(input.value, 10);
+                if (!seconds || seconds < 5 || seconds > 60) {
+                    feedback.textContent = 'عدد باید بین ۵ تا ۶۰ باشد.';
+                    feedback.className   = 'clc-admin__feedback clc-admin__feedback--error';
+                    return;
+                }
+                savePollingBtn.disabled = true;
+                post(
+                    { action: 'livechat_save_polling_interval', nonce: CarnoLivechatAdmin.nonce, seconds: seconds },
+                    function (res) {
+                        if (res.success) {
+                            feedback.textContent = 'ذخیره شد.';
+                            feedback.className   = 'clc-admin__feedback clc-admin__feedback--ok';
+                        } else {
+                            feedback.textContent = 'خطا.';
+                            feedback.className   = 'clc-admin__feedback clc-admin__feedback--error';
+                        }
+                        savePollingBtn.disabled = false;
+                        setTimeout(function () { feedback.textContent = ''; }, 3000);
+                    },
+                    function () {
+                        feedback.textContent = 'خطا.';
+                        feedback.className   = 'clc-admin__feedback clc-admin__feedback--error';
+                        savePollingBtn.disabled = false;
+                    }
+                );
+            });
+        }
+
         var toggleLiveModeBtn = document.getElementById('clc-toggle-live-mode');
         if (toggleLiveModeBtn) {
             toggleLiveModeBtn.addEventListener('click', function () {

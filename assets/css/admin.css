@@ -103,6 +103,56 @@
 }
 
 /* --------------------------------------------------------------------------
+   Settings card
+   -------------------------------------------------------------------------- */
+
+.clc-admin__settings-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 18px 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.clc-admin__settings-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.clc-admin__settings-label {
+    font-weight: 600;
+    font-size: 13px;
+    color: #333;
+    white-space: nowrap;
+}
+
+.clc-admin__settings-input {
+    width: 70px;
+    padding: 5px 8px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.clc-admin__settings-desc {
+    margin: 12px 0 6px;
+    font-size: 13px;
+    color: #555;
+    line-height: 1.6;
+}
+
+.clc-admin__settings-hint {
+    margin: 0;
+    font-size: 12px;
+    color: #2c2d74;
+    font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
    Shortcode info
    -------------------------------------------------------------------------- */
 

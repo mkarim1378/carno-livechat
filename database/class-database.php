@@ -365,7 +365,8 @@ class Carno_Livechat_Database {
         global $wpdb;
 
         $results = $wpdb->get_col(
-            'SELECT id FROM ' . self::messages_table() . ' WHERE is_deleted = 1'
+            'SELECT id FROM ' . self::messages_table() .
+            ' WHERE is_deleted = 1 AND created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)'
         );
 
         return array_map( 'intval', $results );

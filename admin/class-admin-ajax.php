@@ -131,6 +131,21 @@ class Carno_Livechat_Admin_Ajax {
         wp_send_json_success();
     }
 
+    public function save_polling_interval() {
+        check_ajax_referer( 'carno_livechat_admin_nonce', 'nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( [ 'message' => 'Unauthorized.' ], 403 );
+        }
+
+        $seconds = isset( $_POST['seconds'] ) ? absint( $_POST['seconds'] ) : 10;
+        $seconds = max( 5, min( 60, $seconds ) );
+
+        update_option( 'carno_livechat_polling_interval', $seconds );
+
+        wp_send_json_success( [ 'seconds' => $seconds ] );
+    }
+
     public function toggle_live_mode() {
         check_ajax_referer( 'carno_livechat_admin_nonce', 'nonce' );
 

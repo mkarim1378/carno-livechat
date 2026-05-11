@@ -4,7 +4,6 @@
     function startChat(name, sessionId) {
         var chat = document.getElementById('clc-chat');
         if (chat) chat.classList.add('clc-chat--visible');
-        CarnoLC.Heartbeat.start(sessionId);
         CarnoLC.Chat.setChatState(!!CarnoLivechat.chat_enabled);
         CarnoLC.Input.init(sessionId);
         CarnoLC.Polling.start(function () {

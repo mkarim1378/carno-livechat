@@ -42,6 +42,33 @@ if ( ! current_user_can( 'manage_options' ) ) {
         </div>
     </div>
 
+    <div class="clc-admin__settings-card">
+        <div class="clc-admin__settings-row">
+            <label for="clc-polling-interval" class="clc-admin__settings-label">
+                <?php esc_html_e( 'Polling Interval (seconds):', 'carno-livechat' ); ?>
+            </label>
+            <input
+                type="number"
+                id="clc-polling-interval"
+                value="<?php echo (int) get_option( 'carno_livechat_polling_interval', 10 ); ?>"
+                min="5"
+                max="60"
+                step="1"
+                class="clc-admin__settings-input"
+            />
+            <button id="clc-save-polling-interval" class="button">
+                <?php esc_html_e( 'Save', 'carno-livechat' ); ?>
+            </button>
+            <span id="clc-polling-feedback" class="clc-admin__feedback" style="display:inline-block;margin:0 8px;"></span>
+        </div>
+        <p class="clc-admin__settings-desc">
+            <?php esc_html_e( 'هر چند ثانیه یک بار مرورگر کاربران برای دریافت پیام‌های جدید با سرور ارتباط می‌گیرد. عدد کوچک‌تر = پیام‌ها سریع‌تر می‌رسند اما فشار بیشتری روی سرور. عدد بزرگ‌تر = سرور راحت‌تر اما پیام‌ها با تأخیر بیشتری نمایش داده می‌شوند.', 'carno-livechat' ); ?>
+        </p>
+        <p class="clc-admin__settings-hint">
+            <?php esc_html_e( '💡 مقدار پیشنهادی: ۱۰ ثانیه — تعادل مناسبی بین سرعت و فشار سرور. اگه بیش از ۱۰۰ کاربر همزمان دارید عدد را به ۱۵ تا ۲۰ افزایش دهید.', 'carno-livechat' ); ?>
+        </p>
+    </div>
+
     <div class="clc-admin__shortcode-info">
         <strong><?php esc_html_e( 'Shortcode:', 'carno-livechat' ); ?></strong>
         <code>[livechat]</code>

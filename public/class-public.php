@@ -55,8 +55,7 @@ class Carno_Livechat_Public {
             [
                 'ajax_url'           => admin_url( 'admin-ajax.php' ),
                 'nonce'              => wp_create_nonce( 'carno_livechat_nonce' ),
-                'polling_interval'   => 5000,
-                'heartbeat_interval' => 20000,
+                'polling_interval'   => (int) get_option( 'carno_livechat_polling_interval', 10 ) * 1000,
                 'chat_enabled'       => (bool) get_option( 'carno_livechat_chat_enabled', 0 ),
             ]
         );

@@ -48,6 +48,10 @@ class Carno_Livechat_Public_Ajax {
         $is_admin       = current_user_can( 'manage_options' );
         $viewer_session = ( $session_id && $this->is_valid_uuid( $session_id ) ) ? $session_id : null;
 
+        if ( $viewer_session ) {
+            Carno_Livechat_Database::update_last_seen( $viewer_session );
+        }
+
         $messages    = Carno_Livechat_Database::get_messages_since( $last_id, 50, $viewer_session, $is_admin );
         $deleted_ids = Carno_Livechat_Database::get_deleted_ids();
 
