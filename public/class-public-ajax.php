@@ -48,16 +48,19 @@ class Carno_Livechat_Public_Ajax {
         $is_admin       = current_user_can( 'manage_options' );
         $viewer_session = ( $session_id && $this->is_valid_uuid( $session_id ) ) ? $session_id : null;
 
+        $is_banned = false;
+
         if ( $viewer_session ) {
+            // Single SELECT gives us is_banned; avoids a separate is_user_banned() query.
+            $user = Carno_Livechat_Database::get_user_by_session( $viewer_session );
+            if ( $user ) {
+                $is_banned = (bool) $user->is_banned;
+            }
             Carno_Livechat_Database::update_last_seen( $viewer_session );
         }
 
         $messages    = Carno_Livechat_Database::get_messages_since( $last_id, 50, $viewer_session, $is_admin );
         $deleted_ids = Carno_Livechat_Database::get_deleted_ids();
-
-        $is_banned = $session_id && $this->is_valid_uuid( $session_id )
-            ? Carno_Livechat_Database::is_user_banned( $session_id )
-            : false;
 
         wp_send_json_success( [
             'messages'     => $messages,

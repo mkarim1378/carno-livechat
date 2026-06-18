@@ -6,6 +6,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Carno_Livechat_Database {
 
+    // Bump this whenever the schema or indexes change.
+    const DB_VERSION = '1.2';
+
     private static function users_table() {
         global $wpdb;
         return $wpdb->prefix . 'livechat_users';
@@ -51,7 +54,11 @@ class Carno_Livechat_Database {
             is_deleted TINYINT(1)      NOT NULL DEFAULT 0,
             created_at DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (id),
-            KEY idx_created_at (created_at)
+            KEY idx_created_at (created_at),
+            KEY idx_session_id (session_id),
+            KEY idx_deleted_id (is_deleted, id),
+            KEY idx_deleted_created (is_deleted, created_at),
+            KEY idx_session_created (session_id, created_at)
         ) {$charset_collate};";
 
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
@@ -60,29 +67,52 @@ class Carno_Livechat_Database {
     }
 
     public static function maybe_upgrade() {
+        // Fast path: one in-memory get_option() — no DB hit after first run.
+        if ( get_option( 'carno_livechat_db_version' ) === self::DB_VERSION ) {
+            return;
+        }
+
         global $wpdb;
 
-        $table = self::messages_table();
-
-        $col = $wpdb->get_var( "SHOW COLUMNS FROM `{$table}` LIKE 'is_deleted'" );
-        if ( ! $col ) {
-            $wpdb->query( "ALTER TABLE `{$table}` ADD COLUMN `is_deleted` TINYINT(1) NOT NULL DEFAULT 0" );
-        }
-
-        $col = $wpdb->get_var( "SHOW COLUMNS FROM `{$table}` LIKE 'session_id'" );
-        if ( ! $col ) {
-            $wpdb->query( "ALTER TABLE `{$table}` ADD COLUMN `session_id` VARCHAR(64) NULL DEFAULT NULL" );
-        }
-
-        $col = $wpdb->get_var( "SHOW COLUMNS FROM `{$table}` LIKE 'chat_mode'" );
-        if ( ! $col ) {
-            $wpdb->query( "ALTER TABLE `{$table}` ADD COLUMN `chat_mode` VARCHAR(10) NULL DEFAULT NULL" );
-        }
-
+        $table       = self::messages_table();
         $users_table = self::users_table();
-        $col = $wpdb->get_var( "SHOW COLUMNS FROM `{$users_table}` LIKE 'is_banned'" );
-        if ( ! $col ) {
-            $wpdb->query( "ALTER TABLE `{$users_table}` ADD COLUMN `is_banned` TINYINT(1) NOT NULL DEFAULT 0" );
+
+        // Add any columns that old installs may be missing.
+        $columns = [
+            [ $table,       'is_deleted', "TINYINT(1) NOT NULL DEFAULT 0" ],
+            [ $table,       'session_id', "VARCHAR(64) NULL DEFAULT NULL" ],
+            [ $table,       'chat_mode',  "VARCHAR(10) NULL DEFAULT NULL" ],
+            [ $users_table, 'is_banned',  "TINYINT(1) NOT NULL DEFAULT 0" ],
+        ];
+        foreach ( $columns as [ $t, $col, $def ] ) {
+            if ( ! $wpdb->get_var( "SHOW COLUMNS FROM `{$t}` LIKE '{$col}'" ) ) {
+                $wpdb->query( "ALTER TABLE `{$t}` ADD COLUMN `{$col}` {$def}" );
+            }
+        }
+
+        // Add performance indexes that may be missing on old installs.
+        self::add_index_if_missing( $table, 'idx_session_id',      'session_id' );
+        self::add_index_if_missing( $table, 'idx_deleted_id',      'is_deleted, id' );
+        self::add_index_if_missing( $table, 'idx_deleted_created', 'is_deleted, created_at' );
+        self::add_index_if_missing( $table, 'idx_session_created', 'session_id, created_at' );
+
+        update_option( 'carno_livechat_db_version', self::DB_VERSION );
+    }
+
+    private static function add_index_if_missing( $table, $index_name, $columns ) {
+        global $wpdb;
+
+        $exists = $wpdb->get_var(
+            $wpdb->prepare(
+                'SELECT COUNT(*) FROM information_schema.STATISTICS
+                 WHERE table_schema = DATABASE() AND table_name = %s AND index_name = %s',
+                $table,
+                $index_name
+            )
+        );
+
+        if ( ! $exists ) {
+            $wpdb->query( "ALTER TABLE `{$table}` ADD INDEX `{$index_name}` ({$columns})" );
         }
     }
 
@@ -220,15 +250,25 @@ class Carno_Livechat_Database {
             [ 'session_id' => sanitize_text_field( $session_id ) ],
             [ '%d' ], [ '%s' ]
         );
+        delete_transient( 'clc_deleted_ids' );
     }
 
     public static function count_online_users() {
+        $cached = get_transient( 'clc_online_count' );
+        if ( $cached !== false ) {
+            return (int) $cached;
+        }
+
         global $wpdb;
 
-        return (int) $wpdb->get_var(
+        $count = (int) $wpdb->get_var(
             'SELECT COUNT(*) FROM ' . self::users_table() .
             " WHERE last_seen >= DATE_SUB(NOW(), INTERVAL 60 SECOND)"
         );
+
+        set_transient( 'clc_online_count', $count, 15 );
+
+        return $count;
     }
 
     // -------------------------------------------------------------------------
@@ -362,6 +402,11 @@ class Carno_Livechat_Database {
     }
 
     public static function get_deleted_ids() {
+        $cached = get_transient( 'clc_deleted_ids' );
+        if ( $cached !== false ) {
+            return $cached;
+        }
+
         global $wpdb;
 
         $results = $wpdb->get_col(
@@ -369,7 +414,10 @@ class Carno_Livechat_Database {
             ' WHERE is_deleted = 1 AND created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)'
         );
 
-        return array_map( 'intval', $results );
+        $ids = array_map( 'intval', $results );
+        set_transient( 'clc_deleted_ids', $ids, 5 );
+
+        return $ids;
     }
 
     public static function get_all_messages( $limit = 50 ) {
@@ -394,11 +442,15 @@ class Carno_Livechat_Database {
             [ '%d' ],
             [ '%d' ]
         );
+
+        delete_transient( 'clc_deleted_ids' );
     }
 
     public static function delete_all_messages() {
         global $wpdb;
 
         $wpdb->query( 'UPDATE ' . self::messages_table() . ' SET is_deleted = 1' );
+
+        delete_transient( 'clc_deleted_ids' );
     }
 }

@@ -5,6 +5,18 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [2.15.0] - 2026-06-18
+
+**Performance**
+- Fixed `maybe_upgrade()` running 4 `SHOW COLUMNS` queries on every WordPress request — now gated on a `carno_livechat_db_version` option check (one in-memory `get_option()` after first run)
+- Added missing database indexes on `wp_livechat_messages`: `idx_session_id`, `idx_deleted_id (is_deleted, id)`, `idx_deleted_created (is_deleted, created_at)`, `idx_session_created (session_id, created_at)` — eliminates full-table scans on every poll and rate-limit check
+- Cached `get_deleted_ids()` result with a 5-second transient shared across all concurrent users — previously ran a DB query per polling request per user; transient is invalidated immediately on any delete action
+- Cached `count_online_users()` result with a 15-second transient — prevents repeated `COUNT(*)` scans during admin polling
+- Eliminated redundant `is_user_banned()` SELECT in `get_messages()` — reuses result from `get_user_by_session()` which is already fetched; saves one DB round-trip per poll per user
+- Bumped plugin version to 2.15.0
+
+---
+
 ## [2.14.0] - 2026-05-11
 
 **Performance**
