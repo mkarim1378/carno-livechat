@@ -5,6 +5,18 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [2.16.0] - 2026-06-18
+
+**Features**
+- Added phone number collection to registration flow — modal is now two-step: name first, then mobile number (format: 09XXXXXXXXX); phone is validated on both client and server
+- Phone number stored in `wp_livechat_users.phone` column (VARCHAR 20, nullable for backward compat with existing sessions); passed and updated on re-registration from existing sessions
+- Name field max length tightened from 100 to 32 characters on both frontend (`maxlength` attribute) and backend validation
+
+**Fixes**
+- Fixed stateful `/g` regex bug in `modal.js` where calling `.test()` on the same `/g` regex instance would produce intermittent incorrect results due to advancing `lastIndex`; separated filter regex (with `g`) from test regex (without `g`)
+
+---
+
 ## [2.15.0] - 2026-06-18
 
 **Performance**

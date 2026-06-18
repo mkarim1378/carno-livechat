@@ -12,12 +12,13 @@ class Carno_Livechat_Public_Ajax {
         $name       = isset( $_POST['name'] )       ? sanitize_text_field( wp_unslash( $_POST['name'] ) )       : '';
         $session_id = isset( $_POST['session_id'] ) ? sanitize_text_field( wp_unslash( $_POST['session_id'] ) ) : '';
         $page_url   = isset( $_POST['page_url'] )   ? esc_url_raw( wp_unslash( $_POST['page_url'] ) )           : '';
+        $phone      = isset( $_POST['phone'] )      ? sanitize_text_field( wp_unslash( $_POST['phone'] ) )      : '';
 
         if ( empty( $name ) || empty( $session_id ) ) {
             wp_send_json_error( [ 'message' => 'Invalid data.' ], 400 );
         }
 
-        if ( mb_strlen( $name ) > 100 ) {
+        if ( mb_strlen( $name ) > 32 ) {
             wp_send_json_error( [ 'message' => 'Name too long.' ], 400 );
         }
 
@@ -29,11 +30,16 @@ class Carno_Livechat_Public_Ajax {
             wp_send_json_error( [ 'message' => 'Invalid session format.' ], 400 );
         }
 
+        if ( $phone !== '' && ! preg_match( '/^09[0-9]{9}$/', $phone ) ) {
+            wp_send_json_error( [ 'message' => 'Invalid phone number.' ], 400 );
+        }
+
         $user_id = Carno_Livechat_Database::insert_user(
             $name,
             $session_id,
             $page_url,
-            $this->get_client_ip()
+            $this->get_client_ip(),
+            $phone
         );
 
         wp_send_json_success( [ 'user_id' => $user_id ] );

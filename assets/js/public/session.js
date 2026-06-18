@@ -45,11 +45,12 @@
             }
         },
 
-        save: function (name, sessionId) {
+        save: function (name, sessionId, phone) {
             try {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify({
                     name:       name,
-                    session_id: sessionId
+                    session_id: sessionId,
+                    phone:      phone || ''
                 }));
             } catch (e) {}
         },

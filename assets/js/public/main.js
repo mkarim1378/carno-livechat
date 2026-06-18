@@ -36,6 +36,7 @@
                 action:     'livechat_register',
                 nonce:      CarnoLivechat.nonce,
                 name:       session.name,
+                phone:      session.phone || '',
                 session_id: session.session_id,
                 page_url:   window.location.href
             });

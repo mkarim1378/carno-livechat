@@ -38,7 +38,8 @@
     font-weight: bold;
 }
 
-.clc-modal__box input[type="text"] {
+.clc-modal__box input[type="text"],
+.clc-modal__box input[type="tel"] {
     width: 100%;
     padding: 10px 14px;
     border: 1px solid #ddd;
@@ -46,13 +47,23 @@
     font-size: 14px;
     margin-bottom: 14px;
     box-sizing: border-box;
-    direction: rtl;
     font-family: inherit;
     outline: none;
     transition: border-color 0.2s;
 }
 
-.clc-modal__box input[type="text"]:focus {
+.clc-modal__box input[type="text"] {
+    direction: rtl;
+}
+
+.clc-modal__box input[type="tel"] {
+    direction: ltr;
+    text-align: left;
+    letter-spacing: 1px;
+}
+
+.clc-modal__box input[type="text"]:focus,
+.clc-modal__box input[type="tel"]:focus {
     border-color: #2c2d74;
 }
 

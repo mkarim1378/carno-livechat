@@ -10,18 +10,38 @@ $placeholder = isset( $placeholder ) ? $placeholder : __( 'نام شما', 'carn
 
     <div id="clc-modal" class="clc-modal">
         <div class="clc-modal__box">
-            <p class="clc-modal__label"><?php esc_html_e( 'برای ورود نام خود را وارد کنید', 'carno-livechat' ); ?></p>
-            <input
-                type="text"
-                id="clc-name-input"
-                placeholder="<?php echo esc_attr( $placeholder ); ?>"
-                maxlength="100"
-                autocomplete="off"
-            />
-            <button id="clc-name-submit" type="button">
-                <?php esc_html_e( 'ورود به گفتگو', 'carno-livechat' ); ?>
-            </button>
-            <p id="clc-name-error" class="clc-modal__error"></p>
+
+            <div id="clc-step-name">
+                <p class="clc-modal__label"><?php esc_html_e( 'برای ورود نام خود را وارد کنید', 'carno-livechat' ); ?></p>
+                <input
+                    type="text"
+                    id="clc-name-input"
+                    placeholder="<?php echo esc_attr( $placeholder ); ?>"
+                    maxlength="32"
+                    autocomplete="off"
+                />
+                <button id="clc-name-submit" type="button">
+                    <?php esc_html_e( 'مرحله بعد', 'carno-livechat' ); ?>
+                </button>
+                <p id="clc-name-error" class="clc-modal__error"></p>
+            </div>
+
+            <div id="clc-step-phone" style="display:none">
+                <p class="clc-modal__label"><?php esc_html_e( 'شماره موبایل خود را وارد کنید', 'carno-livechat' ); ?></p>
+                <input
+                    type="tel"
+                    id="clc-phone-input"
+                    placeholder="09123456789"
+                    maxlength="11"
+                    autocomplete="off"
+                    dir="ltr"
+                />
+                <button id="clc-phone-submit" type="button">
+                    <?php esc_html_e( 'ورود به گفتگو', 'carno-livechat' ); ?>
+                </button>
+                <p id="clc-phone-error" class="clc-modal__error"></p>
+            </div>
+
         </div>
     </div>
 

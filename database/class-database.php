@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Carno_Livechat_Database {
 
     // Bump this whenever the schema or indexes change.
-    const DB_VERSION = '1.2';
+    const DB_VERSION = '1.3';
 
     private static function users_table() {
         global $wpdb;
@@ -35,6 +35,7 @@ class Carno_Livechat_Database {
             id         BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
             name       VARCHAR(100)    NOT NULL,
             session_id VARCHAR(64)     NOT NULL,
+            phone      VARCHAR(20)     NULL DEFAULT NULL,
             page_url   TEXT,
             ip_address VARCHAR(45),
             is_banned  TINYINT(1)      NOT NULL DEFAULT 0,
@@ -83,6 +84,7 @@ class Carno_Livechat_Database {
             [ $table,       'session_id', "VARCHAR(64) NULL DEFAULT NULL" ],
             [ $table,       'chat_mode',  "VARCHAR(10) NULL DEFAULT NULL" ],
             [ $users_table, 'is_banned',  "TINYINT(1) NOT NULL DEFAULT 0" ],
+            [ $users_table, 'phone',      "VARCHAR(20) NULL DEFAULT NULL" ],
         ];
         foreach ( $columns as [ $t, $col, $def ] ) {
             if ( ! $wpdb->get_var( "SHOW COLUMNS FROM `{$t}` LIKE '{$col}'" ) ) {
@@ -120,8 +122,10 @@ class Carno_Livechat_Database {
     // Users
     // -------------------------------------------------------------------------
 
-    public static function insert_user( $name, $session_id, $page_url, $ip_address ) {
+    public static function insert_user( $name, $session_id, $page_url, $ip_address, $phone = '' ) {
         global $wpdb;
+
+        $phone = sanitize_text_field( $phone );
 
         $existing = $wpdb->get_var(
             $wpdb->prepare(
@@ -131,11 +135,17 @@ class Carno_Livechat_Database {
         );
 
         if ( $existing ) {
+            $update_data   = [ 'last_seen' => current_time( 'mysql' ) ];
+            $update_format = [ '%s' ];
+            if ( $phone !== '' ) {
+                $update_data['phone'] = $phone;
+                $update_format[]      = '%s';
+            }
             $wpdb->update(
                 self::users_table(),
-                [ 'last_seen' => current_time( 'mysql' ) ],
+                $update_data,
                 [ 'session_id' => $session_id ],
-                [ '%s' ],
+                $update_format,
                 [ '%s' ]
             );
             return (int) $existing;
@@ -146,12 +156,13 @@ class Carno_Livechat_Database {
             [
                 'name'       => sanitize_text_field( $name ),
                 'session_id' => sanitize_text_field( $session_id ),
+                'phone'      => $phone !== '' ? $phone : null,
                 'page_url'   => esc_url_raw( $page_url ),
                 'ip_address' => sanitize_text_field( $ip_address ),
                 'created_at' => current_time( 'mysql' ),
                 'last_seen'  => current_time( 'mysql' ),
             ],
-            [ '%s', '%s', '%s', '%s', '%s', '%s' ]
+            [ '%s', '%s', '%s', '%s', '%s', '%s', '%s' ]
         );
 
         return (int) $wpdb->insert_id;
@@ -202,7 +213,7 @@ class Carno_Livechat_Database {
 
         return $wpdb->get_results(
             $wpdb->prepare(
-                'SELECT id, name, session_id, is_banned, created_at, last_seen,
+                'SELECT id, name, session_id, phone, is_banned, created_at, last_seen,
                     CASE WHEN last_seen >= DATE_SUB(NOW(), INTERVAL 60 SECOND) THEN 1 ELSE 0 END AS is_online
                  FROM ' . self::users_table() .
                 ' ORDER BY last_seen DESC LIMIT %d OFFSET %d',
