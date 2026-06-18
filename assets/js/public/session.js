@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    var STORAGE_KEY = 'carno_lc_session';
+    var STORAGE_KEY = 'carno_lc_session_v2';
 
     window.CarnoLC = window.CarnoLC || {};
 
