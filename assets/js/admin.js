@@ -394,6 +394,16 @@
             refreshUsersBtn.addEventListener('click', fetchUsers);
         }
 
+        var exportUsersBtn = document.getElementById('clc-export-users');
+        if (exportUsersBtn) {
+            exportUsersBtn.addEventListener('click', function () {
+                var url = CarnoLivechatAdmin.ajax_url +
+                    '?action=livechat_export_users&nonce=' +
+                    encodeURIComponent(CarnoLivechatAdmin.export_nonce);
+                window.location.href = url;
+            });
+        }
+
         document.querySelectorAll('.clc-admin__mode-btn').forEach(function (btn) {
             btn.addEventListener('click', function () {
                 var mode = btn.dataset.mode;
@@ -504,6 +514,7 @@
         setInterval(fetchOnlineCount, 10000);
         fetchUsers();
         fetchMessages();
+        setInterval(fetchMessages, CarnoLivechatAdmin.polling_interval);
     });
 
 }());

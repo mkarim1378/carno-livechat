@@ -108,9 +108,14 @@ if ( ! current_user_can( 'manage_options' ) ) {
     <div class="clc-admin__user-list-wrap">
         <div class="clc-admin__message-list-header">
             <h2><?php esc_html_e( 'Registered Users', 'carno-livechat' ); ?></h2>
-            <button id="clc-refresh-users" class="button">
-                <?php esc_html_e( 'Refresh', 'carno-livechat' ); ?>
-            </button>
+            <div style="display:flex;gap:8px;">
+                <button id="clc-export-users" class="button">
+                    <?php esc_html_e( 'Export CSV', 'carno-livechat' ); ?>
+                </button>
+                <button id="clc-refresh-users" class="button">
+                    <?php esc_html_e( 'Refresh', 'carno-livechat' ); ?>
+                </button>
+            </div>
         </div>
         <table class="clc-admin__user-table widefat striped">
             <thead>

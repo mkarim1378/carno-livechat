@@ -5,6 +5,16 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [2.18.0] - 2026-06-18
+
+**Fixes**
+- Fixed admin message panel not auto-refreshing — added `setInterval(fetchMessages, 10000)` alongside the existing online-count interval; messages now update every 10 seconds without a page reload
+
+**Features**
+- Added CSV export for registered users — "Export CSV" button in the Users section downloads a UTF-8 BOM CSV (Excel-compatible) containing: Name, Phone, First Visit, Last Seen, Banned, Page URL, IP Address; secured with a dedicated `livechat_export_users` nonce + `manage_options` capability check; fetches all users (no pagination limit)
+
+---
+
 ## [2.17.0] - 2026-06-18
 
 **Features**

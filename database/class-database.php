@@ -208,6 +208,16 @@ class Carno_Livechat_Database {
         return (int) $wpdb->get_var( 'SELECT COUNT(*) FROM ' . self::users_table() );
     }
 
+    public static function get_all_users_for_export() {
+        global $wpdb;
+
+        return $wpdb->get_results(
+            'SELECT name, phone, created_at, last_seen, is_banned, page_url, ip_address
+             FROM ' . self::users_table() . ' ORDER BY created_at DESC',
+            ARRAY_A
+        );
+    }
+
     public static function get_all_users( $limit = 30, $offset = 0 ) {
         global $wpdb;
 

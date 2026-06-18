@@ -203,4 +203,44 @@ class Carno_Livechat_Admin_Ajax {
 
         wp_send_json_success();
     }
+
+    public function export_users() {
+        if ( ! check_ajax_referer( 'livechat_export_users', 'nonce', false ) ) {
+            wp_die( 'Invalid nonce.', 403 );
+        }
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_die( 'Unauthorized.', 403 );
+        }
+
+        $users    = Carno_Livechat_Database::get_all_users_for_export();
+        $filename = 'livechat-users-' . gmdate( 'Y-m-d' ) . '.csv';
+
+        header( 'Content-Type: text/csv; charset=utf-8' );
+        header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
+        header( 'Pragma: no-cache' );
+        header( 'Expires: 0' );
+
+        $out = fopen( 'php://output', 'w' );
+
+        // UTF-8 BOM so Excel opens it correctly.
+        fwrite( $out, "\xEF\xBB\xBF" );
+
+        fputcsv( $out, [ 'Name', 'Phone', 'First Visit', 'Last Seen', 'Banned', 'Page URL', 'IP Address' ] );
+
+        foreach ( $users as $user ) {
+            fputcsv( $out, [
+                $user['name'],
+                $user['phone']      ?? '',
+                $user['created_at'] ?? '',
+                $user['last_seen']  ?? '',
+                $user['is_banned']  ? 'Yes' : 'No',
+                $user['page_url']   ?? '',
+                $user['ip_address'] ?? '',
+            ] );
+        }
+
+        fclose( $out );
+        exit;
+    }
 }

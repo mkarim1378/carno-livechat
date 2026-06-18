@@ -57,10 +57,12 @@ class Carno_Livechat_Admin {
             $this->plugin_name . '-admin',
             'CarnoLivechatAdmin',
             [
-                'ajax_url'     => admin_url( 'admin-ajax.php' ),
-                'nonce'        => wp_create_nonce( 'carno_livechat_admin_nonce' ),
-                'chat_enabled' => (bool) get_option( 'carno_livechat_chat_enabled', 0 ),
-                'chat_mode'    => get_option( 'carno_livechat_chat_mode', 'public' ),
+                'ajax_url'      => admin_url( 'admin-ajax.php' ),
+                'nonce'         => wp_create_nonce( 'carno_livechat_admin_nonce' ),
+                'export_nonce'     => wp_create_nonce( 'livechat_export_users' ),
+                'chat_enabled'     => (bool) get_option( 'carno_livechat_chat_enabled', 0 ),
+                'chat_mode'        => get_option( 'carno_livechat_chat_mode', 'public' ),
+                'polling_interval' => (int) get_option( 'carno_livechat_polling_interval', 10 ) * 1000,
             ]
         );
     }
