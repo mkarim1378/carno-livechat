@@ -309,21 +309,27 @@ class Carno_Livechat_Database {
         $limit   = absint( $limit );
         $table   = self::messages_table();
 
-        // Admin bypass: show every non-deleted message regardless of chat_mode
+        $users_table = self::users_table();
+
+        // Admin bypass: show every non-deleted message + phone from the sender.
         if ( $show_all ) {
             if ( $last_id === 0 ) {
                 return $wpdb->get_results(
                     $wpdb->prepare(
-                        "SELECT id, message, sent_by, session_id, chat_mode, created_at FROM {$table}
-                         WHERE is_deleted = 0 ORDER BY id ASC LIMIT %d",
+                        "SELECT m.id, m.message, m.sent_by, m.session_id, m.chat_mode, m.created_at, u.phone
+                         FROM {$table} m
+                         LEFT JOIN {$users_table} u ON u.session_id = m.session_id
+                         WHERE m.is_deleted = 0 ORDER BY m.id ASC LIMIT %d",
                         $limit
                     )
                 );
             }
             return $wpdb->get_results(
                 $wpdb->prepare(
-                    "SELECT id, message, sent_by, session_id, chat_mode, created_at FROM {$table}
-                     WHERE id > %d AND is_deleted = 0 ORDER BY id ASC LIMIT %d",
+                    "SELECT m.id, m.message, m.sent_by, m.session_id, m.chat_mode, m.created_at, u.phone
+                     FROM {$table} m
+                     LEFT JOIN {$users_table} u ON u.session_id = m.session_id
+                     WHERE m.id > %d AND m.is_deleted = 0 ORDER BY m.id ASC LIMIT %d",
                     $last_id, $limit
                 )
             );
@@ -434,10 +440,15 @@ class Carno_Livechat_Database {
     public static function get_all_messages( $limit = 50 ) {
         global $wpdb;
 
+        $table       = self::messages_table();
+        $users_table = self::users_table();
+
         return $wpdb->get_results(
             $wpdb->prepare(
-                'SELECT id, message, sent_by, session_id, chat_mode, created_at FROM ' . self::messages_table() .
-                ' WHERE is_deleted = 0 ORDER BY id DESC LIMIT %d',
+                "SELECT m.id, m.message, m.sent_by, m.session_id, m.chat_mode, m.created_at, u.phone
+                 FROM {$table} m
+                 LEFT JOIN {$users_table} u ON u.session_id = m.session_id
+                 WHERE m.is_deleted = 0 ORDER BY m.id DESC LIMIT %d",
                 absint( $limit )
             )
         );

@@ -59,7 +59,7 @@
         tbody.innerHTML = '';
 
         if (!users || !users.length) {
-            tbody.innerHTML = '<tr><td colspan="5" class="clc-admin__list-empty">No users yet.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="6" class="clc-admin__list-empty">No users yet.</td></tr>';
             return;
         }
 
@@ -69,6 +69,10 @@
 
             var tdName = document.createElement('td');
             tdName.textContent = user.name;
+
+            var tdPhone = document.createElement('td');
+            tdPhone.textContent = user.phone || '—';
+            tdPhone.style.direction = 'ltr';
 
             var tdFirst = document.createElement('td');
             tdFirst.textContent = formatTime(user.created_at);
@@ -117,6 +121,7 @@
             tdActions.appendChild(banBtn);
 
             tr.appendChild(tdName);
+            tr.appendChild(tdPhone);
             tr.appendChild(tdFirst);
             tr.appendChild(tdLast);
             tr.appendChild(tdStatus);
@@ -260,6 +265,14 @@
                 senderBadge.textContent = msg.chat_mode === 'private'
                     ? '(خصوصی) ' + msg.sent_by
                     : msg.sent_by;
+
+                if (msg.phone) {
+                    var phoneTag = document.createElement('span');
+                    phoneTag.className   = 'clc-admin__user-phone';
+                    phoneTag.textContent = msg.phone;
+                    senderBadge.appendChild(phoneTag);
+                }
+
                 row.appendChild(senderBadge);
             }
 

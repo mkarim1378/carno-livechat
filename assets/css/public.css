@@ -230,6 +230,15 @@
     direction: ltr;
 }
 
+.clc-message__phone {
+    display: block;
+    font-size: 11px;
+    color: #888;
+    direction: ltr;
+    margin-bottom: 3px;
+    letter-spacing: 0.5px;
+}
+
 /* Empty state */
 
 .clc-chat__empty {

@@ -116,6 +116,7 @@ if ( ! current_user_can( 'manage_options' ) ) {
             <thead>
                 <tr>
                     <th><?php esc_html_e( 'Name', 'carno-livechat' ); ?></th>
+                    <th><?php esc_html_e( 'Phone', 'carno-livechat' ); ?></th>
                     <th><?php esc_html_e( 'First Visit', 'carno-livechat' ); ?></th>
                     <th><?php esc_html_e( 'Last Visit', 'carno-livechat' ); ?></th>
                     <th><?php esc_html_e( 'Status', 'carno-livechat' ); ?></th>
@@ -123,7 +124,7 @@ if ( ! current_user_can( 'manage_options' ) ) {
                 </tr>
             </thead>
             <tbody id="clc-user-list">
-                <tr><td colspan="4" class="clc-admin__list-empty"><?php esc_html_e( 'No users yet.', 'carno-livechat' ); ?></td></tr>
+                <tr><td colspan="6" class="clc-admin__list-empty"><?php esc_html_e( 'No users yet.', 'carno-livechat' ); ?></td></tr>
             </tbody>
         </table>
         <div id="clc-user-pagination" class="clc-admin__pagination"></div>

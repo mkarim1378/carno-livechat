@@ -30,6 +30,13 @@
                     sender.className   = 'clc-message__sender';
                     sender.textContent = msg.sent_by;
                     bubble.appendChild(sender);
+
+                    if (CarnoLivechat.is_admin && msg.phone) {
+                        var phoneEl = document.createElement('span');
+                        phoneEl.className   = 'clc-message__phone';
+                        phoneEl.textContent = msg.phone;
+                        bubble.appendChild(phoneEl);
+                    }
                 }
 
                 var text = document.createElement('span');

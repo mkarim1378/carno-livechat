@@ -5,6 +5,15 @@ Versioning follows [Semantic Versioning](https://semver.org/): MINOR for new fea
 
 ---
 
+## [2.17.0] - 2026-06-18
+
+**Features**
+- Admin sees phone number in public chat widget — when a WordPress admin is logged in and views the chat page, each user message bubble shows the sender's phone number below their name (invisible to regular users); powered by `CarnoLivechat.is_admin` flag injected via `wp_localize_script`
+- Admin panel message list shows phone next to sender badge — `get_all_messages()` now LEFT JOINs `wp_livechat_users` to include `phone` per message; rendered as `clc-admin__user-phone` span inside the sender badge
+- Admin panel user table now includes Phone column — `renderUserList()` renders phone (or `—` if empty) as second column; HTML `<th>` and `colspan` updated accordingly
+
+---
+
 ## [2.16.0] - 2026-06-18
 
 **Features**
