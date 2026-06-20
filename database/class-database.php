@@ -208,6 +208,11 @@ class Carno_Livechat_Database {
         return (int) $wpdb->get_var( 'SELECT COUNT(*) FROM ' . self::users_table() );
     }
 
+    public static function delete_all_users() {
+        global $wpdb;
+        $wpdb->query( 'DELETE FROM ' . self::users_table() );
+    }
+
     public static function get_all_users_for_export() {
         global $wpdb;
 

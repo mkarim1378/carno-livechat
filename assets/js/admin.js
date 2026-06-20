@@ -404,6 +404,23 @@
             });
         }
 
+        var deleteAllUsersBtn = document.getElementById('clc-delete-all-users');
+        if (deleteAllUsersBtn) {
+            deleteAllUsersBtn.addEventListener('click', function () {
+                if (!window.confirm('آیا مطمئن هستید؟ تمام کاربران حذف خواهند شد و این عمل قابل بازگشت نیست.')) return;
+
+                deleteAllUsersBtn.disabled = true;
+                post(
+                    { action: 'livechat_delete_all_users', nonce: CarnoLivechatAdmin.nonce },
+                    function (res) {
+                        if (res.success) fetchUsers();
+                        deleteAllUsersBtn.disabled = false;
+                    },
+                    function () { deleteAllUsersBtn.disabled = false; }
+                );
+            });
+        }
+
         document.querySelectorAll('.clc-admin__mode-btn').forEach(function (btn) {
             btn.addEventListener('click', function () {
                 var mode = btn.dataset.mode;

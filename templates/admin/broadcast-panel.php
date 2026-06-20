@@ -115,6 +115,9 @@ if ( ! current_user_can( 'manage_options' ) ) {
                 <button id="clc-refresh-users" class="button">
                     <?php esc_html_e( 'Refresh', 'carno-livechat' ); ?>
                 </button>
+                <button id="clc-delete-all-users" class="button clc-admin__btn-danger">
+                    <?php esc_html_e( 'Delete All Users', 'carno-livechat' ); ?>
+                </button>
             </div>
         </div>
         <table class="clc-admin__user-table widefat striped">

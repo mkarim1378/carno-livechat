@@ -204,6 +204,18 @@ class Carno_Livechat_Admin_Ajax {
         wp_send_json_success();
     }
 
+    public function delete_all_users() {
+        check_ajax_referer( 'carno_livechat_admin_nonce', 'nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( [ 'message' => 'Unauthorized.' ], 403 );
+        }
+
+        Carno_Livechat_Database::delete_all_users();
+
+        wp_send_json_success();
+    }
+
     public function export_users() {
         if ( ! check_ajax_referer( 'livechat_export_users', 'nonce', false ) ) {
             wp_die( 'Invalid nonce.', 403 );
